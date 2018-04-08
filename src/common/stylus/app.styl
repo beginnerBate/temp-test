@@ -1,0 +1,96 @@
+@import './variable'
+#app
+  background-color $color-background
+  display block
+  position absolute
+  z-index 1
+  width 100%
+  height 100%
+.header
+  background $color-theme
+  min-height 50px
+  color $color-font-theme
+  padding: 0 32px
+.header h1
+  font-size $font-size-large-x
+  letter-spacing 4px
+  line-height 50px
+  text-shadow 1px 1px 5px #6196b7
+.login
+  position fixed 
+  top 0
+  right 0
+  bottom 0
+  left 0
+  // background rgba(0,0,0,0.5)
+  text-align center 
+  white-space nowrap
+  z-index 99
+.login:after
+  content ''
+  display inline-block
+  height 100%
+  vertical-align middle
+.login-wrapper
+  display inline-block
+  vertical-align middle
+  background-color $color-background
+  text-align left
+  white-space normal
+  border-radius 3px
+  background-color #ffffff
+  padding 50px 77px 42px 57px
+  box-shadow 0 0 18px 0 rgba(57, 141, 238, 0.12)
+  position relative
+.login-content
+  font-size $font-size-medium
+.login-form-row
+  margin-bottom 30px
+.login-form-row input 
+  padding 5px 10px
+  line-height 30px
+  outline none
+  font-size $font-size-medium
+  box-sizing border-box
+  border 1px solid #d6d6d6
+  border-radius 3px
+  // height: 54px
+  width: 296px
+.login-errors
+  position absolute
+  top 0
+  left 0
+  width 100%
+.login-info-errors
+  display inline-block
+  width 100%
+  height 32px
+  line-height 32px
+  padding: 0 57px
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+.btn
+  display inline-block
+  width 130px
+  height 46px
+  line-height 46px
+  border 1px solid $color-theme
+  box-sizing: border-box
+  border-radius 3px
+  padding 0
+  font-size $font-size-medium-x
+  cursor pointer
+  outline none
+  letter-spacing 2px
+.btn-submit
+  background-color $color-theme
+  color $color-font-theme
+  display block
+  margin 0 auto
+.loading-container
+  position: absolute
+  width: 100%
+  top: 50%
+  left 0
+  transform: translateY(-50%)

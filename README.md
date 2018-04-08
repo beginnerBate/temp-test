@@ -28,8 +28,12 @@
 ## git相关
 1. 创建分支 git branch master1 '初始化项目代码'
 2. 创建分支 git branch temp-test2 '页面骨架搭建'
-
-
+3. 创建分支 git branch temp-test3 '页面登录'
+## 登录页面开发
+  1. axios 安装
+  2. mock 数据模拟
+  3. 自定义验证
+  4. 登录成功时候保存 sessionStroage
 ## Build Setup
 
 ``` bash
