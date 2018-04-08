@@ -11,10 +11,24 @@
   npm i babel-polyfill --save
   // 在main.js中
   import 'babel-pollyfill'
-
 ```
+## 项目骨架搭建
+ 1. 页面需求分析
+   ``` 
+    1. 登录页面（login.vue）
+    2. 主页面 （home.vue）
+    2.1. 数据查询页面 （temp.vue）
+    2.2. 设备管理页面 (device.vue)
+    2.3. 系统设置页面 (set.vue)
+    2.4 左侧菜单 right-mean.vue
+   ```
+  2. 页面颜色分析 蓝色 
+  3. 字号 body同一字体大小 12px/2 Helvetica,Arial,sans-serif
+  4. 路由配置
 ## git相关
 1. 创建分支 git branch master1 '初始化项目代码'
+2. 创建分支 git branch temp-test2 '页面骨架搭建'
+
 
 ## Build Setup
 
