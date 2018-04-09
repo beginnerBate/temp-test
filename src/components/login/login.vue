@@ -81,12 +81,14 @@ import Loading from 'base/loading/loading'
           if(res.data.code == 0) {
             this.verify = false
             this.isLogin = false
-            sessionStroage.set('login','login')
+            sessionStorage.setItem('login','login')
             this.$router.push('/home')
           }else if(res.data.code == -1){
            this.verify = true
            this.isLogin = false
           }
+      }).catch((err) => {
+          console.log(err)
       })
       }
     },

@@ -29,11 +29,32 @@
 1. 创建分支 git branch master1 '初始化项目代码'
 2. 创建分支 git branch temp-test2 '页面骨架搭建'
 3. 创建分支 git branch temp-test3 '页面登录'
+4. 创建分支 git brach temp-test4 'Home页面开发'
 ## 登录页面开发
   1. axios 安装
   2. mock 数据模拟
   3. 自定义验证
   4. 登录成功时候保存 sessionStroage
+## Home页面开发
+  1. rightMean开发 font-awesome 使用
+  ```javascript
+     npm i font-awesome --save
+    //  main.js 中插入
+     import 'font-awesome/css/font-awesome.css'
+  ```
+  2. 体温数据查询页面搭建
+  ```javascript
+    //  1.表格数据渲染
+    mock数据模拟
+    //  2.表格分页
+
+    //  3.表格数据导出    √
+  ```
+  3. 修改密码
+  ```
+    1. 页面样式编写
+    2. 数据交互
+  ```
 ## Build Setup
 
 ``` bash
