@@ -46,9 +46,17 @@
   ```javascript
     //  1.表格数据渲染
     mock数据模拟
-    //  2.表格分页
-
-    //  3.表格数据导出    √
+    //  2.表格分页插件 √
+    自定义page.vue 组件 √
+    //  3.select 组件
+        自定义select.vue 组件 √
+    //  4.表格数据导出    √
+    //  5.vue-happy-scroll 美化
+        1. 安装 npm i -D vue-happy-scroll
+        2. 全局注册
+    //  6.时间选择组件
+     npm install vuejs-datetimepicker
+     https://github.com/tjohnn/vuejs-datetimepicker [https://github.com/tjohnn/vuejs-datetimepicker]
   ```
   3. 修改密码
   ```
