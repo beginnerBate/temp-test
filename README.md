@@ -44,8 +44,7 @@
   ```
   2. 体温数据查询页面搭建
   ```javascript
-    //  1.表格数据渲染
-    mock数据模拟
+    //  1.表格数据渲染 √
     //  2.表格分页插件 √
     自定义page.vue 组件 √
     //  3.select 组件
@@ -55,8 +54,9 @@
         1. 安装 npm i -D vue-happy-scroll
         2. 全局注册
     //  6.时间选择组件
-     npm install vuejs-datetimepicker
-     https://github.com/tjohnn/vuejs-datetimepicker [https://github.com/tjohnn/vuejs-datetimepicker]
+     npm install vue-flatpickr-component
+    //  表格动态数据实时刷新
+      定时器
   ```
   3. 修改密码
   ```

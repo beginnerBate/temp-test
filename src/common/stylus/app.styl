@@ -148,6 +148,7 @@
 //   background: #dee7e7
 .home-left
   flex 1
+  overflow-y: auto
 .temp,.adress,.modify
   padding: 20px
   box-sizing: border-box
@@ -185,6 +186,11 @@
   border-bottom: 1px solid #d4d4d4
   padding-bottom: 15px
   margin-bottom: 15px
+  text-align: right 
+  span 
+    color: #398dee
+  span:hover
+    color: #5ea2f1
 .table
   width: 100%
   thead
@@ -209,3 +215,84 @@
       background-color: #fafafa
   tfoot
     border: 1px solid #d4d4d4
+.temp-search-row .input
+  margin-top 12px
+  width: 100%
+.item-switch-re
+  position relative  
+.item
+  width: 100%
+  position: absolute
+  top: 4px
+  text-align: center  
+.switch
+  margin-top: 8px  
+.switch label {
+    display: block;
+    width: 44px;
+    height: 16px;
+    border-radius: 10px;
+    background: rgba(189, 195, 199, 0.5);
+    vertical-align: middle;
+    position: relative;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-transition: background 350ms ease;
+    transition: background 350ms ease;
+    margin: 0 auto 12px;
+}
+.switch label:before,
+.switch label:after {
+    content: "";
+    display: block;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    -webkit-transition: all 120ms linear;
+    transition: all 120ms linear;
+}
+.switch label:before {
+    background: rgba(189, 195, 199, 0.07);
+    -webkit-transform: translate3d(0, -50%, 0) scale(0);
+    transform: translate3d(0, -50%, 0) scale(0);
+}
+.switch label:after {
+    background: #bdc3c7;
+    -webkit-transform: translate3d(0, -50%, 0);
+    transform: translate3d(0, -50%, 0);
+}
+.switch input:checked + label {
+    background:rgb(146, 197, 255)
+}
+.switch input:checked + label:before {
+    background: rgba(142, 68, 173, 0.07);
+    -webkit-transform: translate3d(100%, -50%, 0) scale(1);
+    transform: translate3d(100%, -50%, 0) scale(1);
+}
+.switch input:checked + label:after {
+    background: $color-theme
+    -webkit-transform: translate3d(100%, -50%, 0);
+    transform: translate3d(100%, -50%, 0);
+}
+.item-label
+  font-size: $font-size-medium
+  color #393939
+  padding-bottom 12px
+.relative
+  position relative
+.input-button
+  position: absolute
+  right: 0
+  top: 28px
+  width: 30px
+  height: 46px
+  border: 1px solid #d4d4d4
+  text-align: center
+  line-height: 46px
+  color: #686868
+/* _______________________________________________________ */

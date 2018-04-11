@@ -6,20 +6,26 @@
         <div class="temp-search-row"><label>病房号</label><input class="input" type="text" v-model="wardNumber"></div>
         <div class="temp-search-row"><label>床号</label><input class="input" type="text" v-model="bedNumber"></div>
         <div class="temp-search-row"><label>温度值</label><input class="input" type="text"></div>
-        <div class="temp-search-row">
+        <div class="temp-search-row relative">
           <label>开始时间</label>
-          <datetime v-model="startTime" format='YYYY-MM-DD H:i:s'></datetime>
+          <flat-pickr v-model="startTime" :config="config" class="input"></flat-pickr>
+          <a class="input-button" title="clear" @click="clearStarttime()">
+           <i class="fa fa-times"></i>
+          </a>
         </div>
-        <div class="temp-search-row">
+        <div class="temp-search-row relative">
           <label>结束时间</label>
-          <datetime v-model="endTime" format='YYYY-MM-DD H:i:s' value='0'></datetime>
+          <flat-pickr v-model="endTime" :config="config" class="input"></flat-pickr>
+          <a class="input-button" title="clear" @click="clearEndtime()" >
+           <i class="fa fa-times"></i>
+          </a>
         </div>
-        <div class="temp-search-row"><span class="btn btn-search" @click="findData"><i class="fa fa-search"></i>查询</span></div>
+        <div class="temp-search-row" style="margin-top: 26px;"><span class="btn btn-search" @click="findData"><i class="fa fa-search"></i>查询</span></div>
       </div>
     </div>
     <div class="temp-table">
       <div class="temp-table-header"> 
-        <h1 @click="export2Excel()"><i class="fa fa-download"></i> 导出数据</h1>
+        <h1><span  @click="export2Excel()"><i class="fa fa-download"></i> 导出数据</span></h1>
       </div>
       <div class="temp-table-content">
         <table class="table">
@@ -36,6 +42,7 @@
             </tr>
           </thead>
           <tbody>
+            <tr v-if="!total">没有相关数据</tr>
             <tr v-for="(item, index) in tableData" :key="index">
               <th>{{item.temperatureId}}</th>
               <th>{{item.inpatientAreaName}}</th>
@@ -45,11 +52,21 @@
               <th>{{item.temperatureValue}}</th>
               <th>{{item.recordTime | formatDate}}</th>
               <!-- <th v-for="(item,index) in item" :key="index">{{item}}</th> -->
+              
             </tr>
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="7"><page :total="total" :current-page="page" @pagechange='pagechange'></page></td>
+              <td colspan="6"><page :total="total" :current-page="page" @pagechange='pagechange'></page></td>
+              <td colspan="1" class="item-switch-re">
+                <div class="item">
+                  <span class="item-label" :style="{color: auto == true ? '#398dee': '#333333'}">自动刷新</span>
+                    <div class="switch">
+                        <input id="switch" type="checkbox" hidden="hidden" v-model="auto"/>
+                        <label for="switch"></label>
+                    </div>
+                </div>
+                </td>
             </tr>
           </tfoot>
         </table>
@@ -62,7 +79,8 @@
 import {getTemp} from 'api/getTemp'
 import Page from 'base/page/page'
 import {formatDate} from 'api/data'
-import Datetime from 'vuejs-datetimepicker'
+import flatPickr from 'vue-flatpickr-component'
+import 'flatpickr/dist/flatpickr.css'
   export default {
     data () {
       return {
@@ -74,7 +92,16 @@ import Datetime from 'vuejs-datetimepicker'
         inpatientAreaCode:'001',
         startTime:'',
         endTime:'',
-        tableData: []
+        auto: '',
+        config:{
+          enableTime: true,
+          enableSeconds:true,
+          time_24hr:true,
+          dateFormat: "Y-m-d H:i:s",
+          
+        },
+        tableData: [],
+        TimerAjax:""
       }
     },
     filters:{
@@ -85,7 +112,7 @@ import Datetime from 'vuejs-datetimepicker'
     },
     components: {
       Page,
-      Datetime
+      flatPickr
     },
     methods: {
       pagechange (value) {
@@ -108,13 +135,21 @@ import Datetime from 'vuejs-datetimepicker'
           }
         getTemp(mydata).then((data) => {
           console.log(data.data)
-          // console.log(data.data.data)
           if( data.code == '200') {
             this.total = data.total
             this.tableData = data.data
-
+          }else if (data.code == '404'){
+            this.total = 0
+            this.tableData = []
           }
         })
+      },
+      clearStarttime () {
+        this.startTime = ''
+        console.log(this.startTime)
+      },
+      clearEndtime () {
+        this.endTime = ''
       },
       export2Excel() {
       　　require.ensure([], () => {
@@ -138,6 +173,25 @@ import Datetime from 'vuejs-datetimepicker'
         this.page = value
         this.getTempData()
       },
+      auto (value) {
+        if (value == true){
+          // 自动刷新
+          this.row = 10
+          this.page =1
+          this.bedNumber= ''
+          this.wardNumber = ''
+          this.endTime = ''
+          this.startTime = ''
+          let that = this
+          this.TimerAjax = setInterval(function(){
+            that.getTempData()
+          },1000)
+        }
+        else if(value == false){
+          // 清除定时器
+          clearInterval(this.TimerAjax)
+        }
+      }
     },
   }
 </script>
