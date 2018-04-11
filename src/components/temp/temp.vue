@@ -42,7 +42,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-if="!total">没有相关数据</tr>
+            <tr  v-if="!total"><th colspan="7" class="no-data">没有相关数据</th></tr>
             <tr v-for="(item, index) in tableData" :key="index">
               <th>{{item.temperatureId}}</th>
               <th>{{item.inpatientAreaName}}</th>
@@ -52,7 +52,6 @@
               <th>{{item.temperatureValue}}</th>
               <th>{{item.recordTime | formatDate}}</th>
               <!-- <th v-for="(item,index) in item" :key="index">{{item}}</th> -->
-              
             </tr>
           </tbody>
           <tfoot>
@@ -70,6 +69,10 @@
             </tr>
           </tfoot>
         </table>
+        <!-- loading -->
+        <div v-show="isloading && !auto" class="loading-container">
+          <loading title=""></loading>
+        </div>
       </div>
     </div>
   </div>
@@ -81,6 +84,7 @@ import Page from 'base/page/page'
 import {formatDate} from 'api/data'
 import flatPickr from 'vue-flatpickr-component'
 import 'flatpickr/dist/flatpickr.css'
+import Loading from 'base/loading/loading'
   export default {
     data () {
       return {
@@ -101,7 +105,8 @@ import 'flatpickr/dist/flatpickr.css'
           
         },
         tableData: [],
-        TimerAjax:""
+        TimerAjax:"",
+        isloading:false
       }
     },
     filters:{
@@ -112,7 +117,8 @@ import 'flatpickr/dist/flatpickr.css'
     },
     components: {
       Page,
-      flatPickr
+      flatPickr,
+      Loading
     },
     methods: {
       pagechange (value) {
@@ -124,6 +130,7 @@ import 'flatpickr/dist/flatpickr.css'
       this.getTempData()
       },
       getTempData () {
+        this.isloading = true
         let mydata = {
           rows:this.row,
           page:this.page,
@@ -134,7 +141,7 @@ import 'flatpickr/dist/flatpickr.css'
           endTime: this.endTime
           }
         getTemp(mydata).then((data) => {
-          console.log(data.data)
+         this.isloading = false
           if( data.code == '200') {
             this.total = data.total
             this.tableData = data.data

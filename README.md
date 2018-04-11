@@ -56,7 +56,7 @@
     //  6.时间选择组件
      npm install vue-flatpickr-component
     //  表格动态数据实时刷新
-      定时器
+      定时器 组件销毁的时候 清空定时器
   ```
   3. 修改密码
   ```
