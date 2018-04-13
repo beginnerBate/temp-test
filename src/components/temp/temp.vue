@@ -42,7 +42,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr  v-if="!total"><th colspan="7" class="no-data">没有相关数据</th></tr>
+            <tr  v-if="onData"><th colspan="7" class="no-data">没有相关数据</th></tr>
             <tr v-for="(item, index) in tableData" :key="index">
               <th>{{item.temperatureId}}</th>
               <th>{{item.inpatientAreaName}}</th>
@@ -70,7 +70,7 @@
           </tfoot>
         </table>
         <!-- loading -->
-        <div v-show="isloading && !auto" class="loading-container">
+        <div v-show="isloading && !auto && !total" class="loading-container">
           <loading title=""></loading>
         </div>
       </div>
@@ -106,7 +106,8 @@ import Loading from 'base/loading/loading'
         },
         tableData: [],
         TimerAjax:"",
-        isloading:false
+        isloading:false,
+        onData: false
       }
     },
     filters:{
@@ -145,10 +146,15 @@ import Loading from 'base/loading/loading'
           if( data.code == '200') {
             this.total = data.total
             this.tableData = data.data
+            this.onData = false
           }else if (data.code == '404'){
+            this.onData = true
             this.total = 0
             this.tableData = []
           }
+        }).catch((err)=>{
+          console.log(err)
+          this.isloading = false
         })
       },
       clearStarttime () {
@@ -200,6 +206,10 @@ import Loading from 'base/loading/loading'
         }
       }
     },
+    destroyed () {
+      // 清除定时器
+    clearInterval(this.TimerAjax)
+    }
   }
 </script>
 

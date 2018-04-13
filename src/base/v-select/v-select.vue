@@ -1,13 +1,11 @@
 <template>
   <div class="v-select">
     <input type="text" v-model="sData" @click='listShow = !listShow' class="input">
-    <happy-scroll>
     <div v-show="listShow" class="v-select-list" ref="selectWrapper">
       <ul>
         <li v-for="(item,index) in list " :value="index" @click="onItemclick(index)" :key="index">{{item}}</li>
       </ul>
     </div>  
-    </happy-scroll>
   </div>
 </template>
 <script>
@@ -23,6 +21,7 @@ export default {
   methods: {
     onItemclick(value) {
       this.sData = this.list[value]
+      this.$emit('selectItem',this.list[value])
       this.listShow = false
     }
   },

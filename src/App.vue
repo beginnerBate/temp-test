@@ -13,7 +13,7 @@ export default {
   },
   data() {
     return {
-      isHead: false
+      isHead: true
     }
   },
   watch: {

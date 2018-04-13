@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <header class="login-header">体温智能监测系统</header>
+    <header class="login-header">医疗护理智能监测系统</header>
     <div class="login-wrapper">
       <div class="login-content">
         <form class="login-form" @submit.prevent="onSubmit">

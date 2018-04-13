@@ -10,6 +10,9 @@ import Device from 'components/device/device'
 import Set from 'components/set/set'
 import ModifyPwd from 'components/modify-pwd/modify-pwd'
 import TAdress from 'components/t-adress/t-adress'
+import Trans from 'components/trans/trans'
+
+
 export default new Router({
   routes: [
     {
@@ -37,6 +40,10 @@ export default new Router({
         {
           path: 'place',
           component: TAdress
+        },
+        {
+           path: 'trans',
+           component:Trans
         },
         {
           path: 'set',

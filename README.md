@@ -30,6 +30,8 @@
 2. 创建分支 git branch temp-test2 '页面骨架搭建'
 3. 创建分支 git branch temp-test3 '页面登录'
 4. 创建分支 git brach temp-test4 'Home页面开发'
+   导航优化 二级菜单可折叠
+
 ## 登录页面开发
   1. axios 安装
   2. mock 数据模拟
@@ -37,6 +39,7 @@
   4. 登录成功时候保存 sessionStroage
 ## Home页面开发
   1. rightMean开发 font-awesome 使用
+    
   ```javascript
      npm i font-awesome --save
     //  main.js 中插入
@@ -78,5 +81,7 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 ```
-
+## 相关问题
+  1. vue click 事件 会点击子元素 利用index
+  2. 只要异步动态获取数据 要用loading加载
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
