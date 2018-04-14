@@ -1,0 +1,345 @@
+@import './variable'
+@import './modify'
+#app
+  background-color $color-background
+  display block
+  position absolute
+  z-index 1
+  width 100%
+  height 100%
+  overflow hidden
+.header
+  background $color-theme
+  min-height 50px
+  color $color-font-theme
+  padding: 0 32px
+.header h1
+  font-size $font-size-large-x
+  letter-spacing 4px
+  line-height 50px
+  text-shadow 1px 1px 5px #6196b7
+.login-header
+  font-size 30px
+  letter-spacing 18px
+  line-height 50px
+  text-shadow 1px 1px 5px #6196b7
+  color $color-theme
+  position fixed
+  width: 100%
+  text-align: center
+  top 15%
+.login
+  position fixed 
+  top 0
+  right 0
+  bottom 0
+  left 0
+  // background rgba(0,0,0,0.5)
+  text-align center 
+  white-space nowrap
+  z-index 99
+.login:after
+  content ''
+  display inline-block
+  height 100%
+  vertical-align middle
+.login-wrapper
+  display inline-block
+  vertical-align middle
+  background-color $color-background
+  text-align left
+  white-space normal
+  border-radius 3px
+  background-color #ffffff
+  padding 50px 77px 42px 57px
+  box-shadow 0 0 18px 0 rgba(57, 141, 238, 0.12)
+  position relative
+.login-content
+  font-size $font-size-medium
+.login-form-row
+  margin-bottom 30px
+.login-form-row input 
+  padding 5px 10px
+  line-height 30px
+  outline none
+  font-size $font-size-medium
+  box-sizing border-box
+  border 1px solid #d6d6d6
+  border-radius 3px
+  // height: 54px
+  width: 296px
+.login-errors
+  position absolute
+  top 0
+  left 0
+  width 100%
+.login-info-errors
+  display inline-block
+  width 100%
+  height 32px
+  line-height 32px
+  padding: 0 57px
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+.btn
+  display inline-block
+  width 130px
+  height 46px
+  line-height 46px
+  border 1px solid $color-theme
+  box-sizing: border-box
+  border-radius 3px
+  padding 0
+  font-size $font-size-medium-x
+  cursor pointer
+  outline none
+  letter-spacing 2px
+.input
+  padding 5px 10px
+  line-height 30px
+  outline none
+  font-size $font-size-medium
+  box-sizing border-box
+  border 1px solid #d6d6d6
+  border-radius 3px
+.btn-submit
+  background-color $color-theme
+  color $color-font-theme
+  display block
+  margin 0 auto
+.loading-container
+  position: absolute
+  width: 100%
+  top: 50%
+  left 0
+  transform: translateY(-50%)
+.home
+  width 100%
+  height 100%
+  display flex
+.home-right
+  flex 0 0 240px
+  background #f5f5f5
+  border-right: 1px solid #e0e1e5
+  position relative
+  height 100%
+.right-menu
+  font-size $font-size-medium-x
+  padding-top 1px
+.r-m-list-item
+  width: 100%
+  line-height: 40px
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06)
+  color: #959fb1
+  cursor pointer
+.r-m-list-item-title
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06)
+.r-m-list-item i 
+  padding-left 20px
+  padding-right: 10px
+  font-size: $font-size-medium-x
+.r-m-list-item-title i
+  padding-left 20px
+  padding-right: 10px
+  font-size: $font-size-medium-x    
+.r-m-list-item.router-link-exact-active
+  background-color: #6aafff
+  color #fff
+.r-m-list-child
+  color: #686868
+  font-size 14px
+  background: #fff
+  display: none
+.r-m-list-child.active-menu
+  display: block
+.r-m-list-child-item
+  padding-left: 18px
+.r-m-list-child-item i
+  font-size: 14px
+.r-m-list-child-item.router-link-exact-active
+  background-color: #6aafff
+  color #fff
+.home-left
+  flex 1
+  overflow-y: auto
+.temp,.adress,.modify
+  padding: 20px
+  box-sizing: border-box
+  overflow hidden  
+.temp-search,.temp-table,.adress-new,.modify-title
+  margin-bottom 20px
+  padding: 20px
+  background-color: #ffffff
+  box-shadow 0 0 18px 0 rgba(57, 141, 238, 0.12)
+.temp-search h1,.adress-new h1,.modify-title>h1
+  letter-spacing: 3px
+  font-size: $font-size-medium-x
+  color #393939
+  padding-bottom: 15px
+  margin-bottom: 15px
+  border-bottom: 1px solid #d4d4d4
+.temp-search-wrapper,.flexbox
+  display: flex
+.temp-search-row,.flexbox>div
+  margin 0 15px
+.temp-search-row label,.flexbox>div>label
+  padding-right 15px
+.temp-search-row input 
+  // width 80px
+.btn-search
+  background: $color-theme
+  color #fff
+  text-align: center
+  letter-spacing: 4px
+  i
+    padding-right 12px
+.btn-search:hover
+  background-color: #2575da
+.temp-table-content
+  position relative
+.temp-table-header h1
+  border-bottom: 1px solid #d4d4d4
+  padding-bottom: 15px
+  margin-bottom: 15px
+  text-align: right
+  position: relative
+  span 
+    color: #398dee
+  span:hover
+    color: #5ea2f1
+  span.btn-add
+    position: absolute
+    left: 0
+    top:-10px
+    width 160px
+    background: #398dee
+    color #FFF
+    text-align: center
+    padding: 8px
+    border-radius: 5px
+    cursor: pointer
+    &:hover
+      background: #5ea2f1
+
+.table
+  width: 100%
+  thead
+    letter-spacing: 3px
+    height 46px
+    line-height: 46px
+    border-top 1px solid #d4d4d4
+    border-bottom 1px solid #d4d4d4
+    border-right 1px solid #d4d4d4
+    tr
+      th
+        border-left: 1px solid #d4d4d4
+  tbody
+    border-right 1px solid #d4d4d4
+    tr
+      height 40px
+      line-height: 40px
+      border-bottom 1px solid #d4d4d4  
+      th
+        border-left: 1px solid #d4d4d4
+    tr:nth-of-type(2n)
+      background-color: #fafafa
+  tfoot
+    border: 1px solid #d4d4d4
+.temp-search-row .input
+  margin-top 12px
+  width: 100%
+.item-switch-re
+  position relative  
+.item
+  width: 100%
+  position: absolute
+  top: 4px
+  text-align: center  
+.switch
+  margin-top: 8px  
+.switch label {
+    display: block;
+    width: 44px;
+    height: 16px;
+    border-radius: 10px;
+    background: rgba(189, 195, 199, 0.5);
+    vertical-align: middle;
+    position: relative;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-transition: background 350ms ease;
+    transition: background 350ms ease;
+    margin: 0 auto 12px;
+}
+.switch label:before,
+.switch label:after {
+    content: "";
+    display: block;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    -webkit-transition: all 120ms linear;
+    transition: all 120ms linear;
+}
+.switch label:before {
+    background: rgba(189, 195, 199, 0.07);
+    -webkit-transform: translate3d(0, -50%, 0) scale(0);
+    transform: translate3d(0, -50%, 0) scale(0);
+}
+.switch label:after {
+    background: #bdc3c7;
+    -webkit-transform: translate3d(0, -50%, 0);
+    transform: translate3d(0, -50%, 0);
+}
+.switch input:checked + label {
+    background:rgb(146, 197, 255)
+}
+.switch input:checked + label:before {
+    background: rgba(142, 68, 173, 0.07);
+    -webkit-transform: translate3d(100%, -50%, 0) scale(1);
+    transform: translate3d(100%, -50%, 0) scale(1);
+}
+.switch input:checked + label:after {
+    background: $color-theme
+    -webkit-transform: translate3d(100%, -50%, 0);
+    transform: translate3d(100%, -50%, 0);
+}
+.item-label
+  font-size: $font-size-medium
+  color #393939
+  padding-bottom 12px
+.item-label.btn-refresh
+  position absolute
+  padding: 12px
+  background: $color-theme
+  color: #fff
+  border-radius: 4px
+  cursor pointer
+.item-label.btn-refresh:active
+  background: #0069d6 
+.relative
+  position relative
+.input-button
+  position: absolute
+  right: 0
+  top: 28px
+  width: 30px
+  height: 42px
+  border: 1px solid #d4d4d4
+  text-align: center
+  line-height: 42px
+  color: #686868
+.no-data
+  color: #686868
+  padding: 12px
+.input-txt
+  // width: 100%
+  display: block
+  margin-top: 10px
+/* _______________________________________________________ */
