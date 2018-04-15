@@ -26,6 +26,7 @@
       <div class="temp-table-header"> 
         <h1>
           <span  @click="export2Excel()"><i class="fa fa-download"></i> 导出数据</span>
+          <span class="btn-add" @click="messageShow=true"><i class="fa fa-plus"></i> 新增设备</span>
           </h1>
       </div>
       <div class="temp-table-content">
@@ -66,6 +67,31 @@
         <div v-show="isloading && !total" class="loading-container">
           <loading title=""></loading>
         </div>
+        <!-- message-box-新增位置管理 -->
+        <message-box title="新增设备" @hide="messageShow=false" v-if="messageShow"> 
+          <form class="add-form">
+            <div class="add-form-item-label">
+              <label for="deviceType">选择设备类型</label>
+              <span>输液监控器</span>
+              <t-radio value="01" v-model="add.deviceTypeCode"></t-radio>
+              <span>体温计</span> 
+              <t-radio value="03" v-model="add.deviceTypeCode"></t-radio> 
+            </div>
+            <div class="add-form-item-input">
+              <label for="wardNumber">填写设备名称</label>
+              <input type="text" v-model="add.deviceName" class="input" required>
+            </div>
+            <div class="add-form-item-input">
+              <label for="bedNumber">填写设备编号</label>
+              <input type="text" v-model="add.deviceCode" class="input" required>
+            </div>
+            <div>
+              <button class="btn btn-submit" @click="addDevice()">提交</button>
+            </div>
+          </form>
+        </message-box>
+        <!-- notice -->
+        <v-notice v-if="notice.type" :type="notice.type" :info="notice.info"></v-notice>        
       </div>
     </div>
   </div>
@@ -75,6 +101,10 @@
 import {getDevice} from 'api/getDevice'
 import Page from 'base/page/page'
 import Loading from 'base/loading/loading'
+import MessageBox from 'base/message-box/message-box'
+import TRadio from 'base/t-radio/t-radio'
+import VSelect from 'base/v-select/v-select'
+import VNotice from 'base/v-notice/v-notice'
   export default {
     data () {
       return {
@@ -91,7 +121,18 @@ import Loading from 'base/loading/loading'
         options:[
           {text:'输液监控器',value:'01'},
           {text:'体温计',value:'03'},
-        ]
+        ],
+        add: {
+          deviceTypeCode: '01',  // 设备类型
+          deviceName: '',  // 设备名称
+          deviceCode:''     // 设备编号
+        },
+        deviceCodeList:[],
+        messageShow: false,
+        notice:{
+          type:'',
+          info:'',
+        }
       }
     },
     filters:{
@@ -105,7 +146,11 @@ import Loading from 'base/loading/loading'
     },
     components: {
       Page,
-      Loading
+      Loading,
+      MessageBox,
+      TRadio,
+      VSelect,
+      VNotice
     },
     methods: {
       pagechange (value) {
@@ -150,6 +195,40 @@ import Loading from 'base/loading/loading'
           console.log(err)
           this.isloading = false
         })
+      },
+      // 提交新设备
+      addDevice () {
+        let mydata = {
+          deviceTypeCode: this.add.deviceTypeCode,
+          deviceName: this.add.deviceName,
+          deviceCode: this.add.deviceCode
+        }
+        console.log(mydata)
+        // 参数验证
+        if (this.add.deviceName.length == 0){return}
+        if (this.add.deviceCode.length == 0){return}
+
+        
+        // 提交
+        this.notice.type = 'loading'
+        this.notice.info = '提交中'
+        // addDevice(mydata).then((res)=>{
+        //   if (res.code == '200') {
+        //     console.log('添加成功')
+        //   }else {
+        //     // 添加失败
+        //   }
+        // })
+        // 模拟
+        let that = this
+        setTimeout(function(){
+        that.notice.type = 'success'
+        that.notice.info = '提交成功'
+        setTimeout(()=>{
+        that.notice.type = ''
+        that.notice.info = ''
+        },1000)
+        },3000)
       },
       export2Excel() {
       　　require.ensure([], () => {

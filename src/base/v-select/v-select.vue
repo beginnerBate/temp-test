@@ -11,18 +11,32 @@
 <script>
 // import Bscroll from 'better-scroll'
 export default {
-  props:['list'],
+  name:'v-select',
+  model: {
+    prop: 'model',
+    event: 'change'
+  },
+  props:{
+    list: {
+      type: Array,
+      default: ''
+    },
+    model: {
+      type: [String, Number],
+      require: true
+    }
+  },
   data () {
     return {
-      sData: this.list[0],
+      sData: '',
       listShow: false,
     }
   },
   methods: {
     onItemclick(value) {
       this.sData = this.list[value]
-      this.$emit('selectItem',this.list[value])
       this.listShow = false
+      this.$emit('change',this.list[value])
     }
   },
   created(){
@@ -39,7 +53,7 @@ export default {
 </script>
 <style lang="stylus" scoped>
 .v-select
-  margin-top: 12px;
+  position relative
 .v-select-list
   width 100%
   height 200px
@@ -51,6 +65,7 @@ export default {
   border-radius 8px
   border: 1px solid;
   border-color: #d6d6d6;
+  position absolute
 .v-select-list ul
   width 100%
   li
