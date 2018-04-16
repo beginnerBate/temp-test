@@ -33,7 +33,6 @@
             <tr>
               <!-- <th>序号</th> -->
               <th>序号</th>
-              <th>病区</th>
               <th>病房号</th>
               <th>床号</th>      
               <th>设备名称</th>
@@ -42,10 +41,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr  v-if="onData"><th colspan="7" class="no-data">没有相关数据</th></tr>
+            <tr  v-if="onData"><th colspan="6" class="no-data">没有相关数据</th></tr>
             <tr v-for="(item, index) in tableData" :key="index">
               <th>{{item.temperatureId}}</th>
-              <th>{{item.inpatientAreaName}}</th>
               <th>{{item.wardNumber}}</th>
               <th>{{item.bedNumber}}</th>
               <th>{{item.deviceName}}</th>
@@ -56,7 +54,7 @@
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="6"><page :total="total" :current-page="page" @pagechange='pagechange'></page></td>
+              <td colspan="5"><page :total="total" :current-page="page" @pagechange='pagechange'></page></td>
               <td colspan="1" class="item-switch-re">
                 <div class="item">
                   <span class="item-label" :style="{color: auto == true ? '#398dee': '#333333'}">自动刷新</span>
@@ -159,7 +157,6 @@ import Loading from 'base/loading/loading'
       },
       clearStarttime () {
         this.startTime = ''
-        console.log(this.startTime)
       },
       clearEndtime () {
         this.endTime = ''

@@ -17,17 +17,16 @@
           <span class='login-info-errors' v-if="secondPwd.verify">两次密码不一致</span>
           </div>
         <div><span class="btn btn-search" @click="modify()">确认修改</span></div>
-                      <!-- loading -->
-        <div v-show="isLogin" class="loading-container">
-          <loading title=""></loading>
-        </div>
+        <!-- notice -->
+        <v-notice v-if="notice.type" :type="notice.type" :info="notice.info"></v-notice>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Loading from 'base/loading/loading'
+import {updatePassword} from 'api/updatePassword'
+import VNotice from 'base/v-notice/v-notice'
   export default {
     data() {
       return {
@@ -44,16 +43,19 @@ import Loading from 'base/loading/loading'
         secondPwd:{
           value:'',
           verify:false
-        }
+        },
+        notice:{
+          type:'',
+          info:'',
+        },
       }
     },
     watch: {
       verify(newValue, oldValue) {
-        
       }
     },
     components:{
-      Loading
+      VNotice
     },
     methods: {
       modify() {
@@ -85,7 +87,36 @@ import Loading from 'base/loading/loading'
           this.secondPwd.verify = false
         }
         // 提交数据
-         this.isLogin = true
+        // 提交
+        this.notice.type = 'loading'
+        this.notice.info = '提交中'
+        let that = this
+         updatePassword({oldPassword: this.password.value,newPassword:this.secondPwd.value}).then((res)=>{
+          if (res.code == '200') {
+            that.notice.type = 'success'
+            that.notice.info = '修改成功'
+            setTimeout(()=>{
+              that.notice.type = ''
+              that.notice.info = ''
+              that.$router.push('/login')         
+            },1000)
+          } 
+          if (res.code == '400') {
+            that.notice.type = 'error'
+            that.notice.info = '修改失败'
+            setTimeout(()=>{
+              that.notice.type = ''
+              that.notice.info = ''
+            },1000)
+          }
+           }).catch((err)=>{
+            that.notice.type = 'error'
+            that.notice.info = '修改失败'
+            setTimeout(()=>{
+              that.notice.type = ''
+              that.notice.info = ''
+            },1000)             
+           })
       }
     },
   }

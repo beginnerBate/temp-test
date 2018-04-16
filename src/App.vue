@@ -13,16 +13,12 @@ export default {
   },
   data() {
     return {
-      isHead: true
+      isHead: this.$store.state.isLogin
     }
   },
   watch: {
     $route(newValue, oldValue) {
-      if(this.$route.name == 'login'){
-        this.isHead = false
-      }else {
-        this.isHead = true
-      }
+      this.isHead = this.$store.state.isLogin
     }
   },
 }

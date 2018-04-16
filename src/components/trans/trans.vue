@@ -5,7 +5,7 @@
       <div class="temp-search-wrapper">
         <div class="temp-search-row"><label>病房号</label><input class="input" type="text" v-model="wardNumber"></div>
         <div class="temp-search-row"><label>床号</label><input class="input" type="text" v-model="bedNumber"></div>
-        <div class="temp-search-row"><label>剩余容量</label><input class="input" type="text"></div>
+        <div class="temp-search-row"><label>剩余容量</label><input class="input" type="text" v-model="surplus"></div>
         <div class="temp-search-row relative">
           <label>开始时间</label>
           <flat-pickr v-model="startTime" :config="config" class="input"></flat-pickr>
@@ -33,7 +33,6 @@
             <tr>
               <!-- <th>序号</th> -->
               <th>序号</th>
-              <th>病区</th>
               <th>病房号</th>
               <th>床号</th>      
               <th>设备名称</th>
@@ -47,10 +46,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr  v-if="onData"><th colspan="7" class="no-data">没有相关数据</th></tr>
+            <tr  v-if="onData"><th colspan="11" class="no-data">没有相关数据</th></tr>
             <tr v-for="(item, index) in tableData" :key="index">
-              <th>{{item.temperatureId}}</th>
-              <th>{{item.inpatientAreaName}}</th>
+              <th>{{item.infusionMonitorId}}</th>
               <th>{{item.wardNumber}}</th>
               <th>{{item.bedNumber}}</th>
               <th>{{item.deviceName}}</th>
@@ -65,7 +63,7 @@
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="10"><page :total="total" :current-page="page" @pagechange='pagechange'></page></td>
+              <td colspan="9"><page :total="total" :current-page="page" @pagechange='pagechange'></page></td>
               <td colspan="2" class="item-switch-re">
                 <div class="item">
                   <span class="item-label" :style="{color: auto == true ? '#398dee': '#333333'}">自动刷新</span>
@@ -102,7 +100,7 @@ import Loading from 'base/loading/loading'
         total: 0,
         bedNumber:'',
         wardNumber:'',
-        inpatientAreaCode:'001',
+        surplus:'',
         startTime:'',
         endTime:'',
         auto: '',
@@ -151,9 +149,9 @@ import Loading from 'base/loading/loading'
         let mydata = {
           rows:this.row,
           page:this.page,
-          inpatientAreaCode:this.inpatientAreaCode,
           bedNumber: this.bedNumber,
           wardNumber: this.wardNumber,
+          surplus: this.surplus,
           startTime: this.startTime,
           endTime: this.endTime
           }
@@ -175,7 +173,6 @@ import Loading from 'base/loading/loading'
       },
       clearStarttime () {
         this.startTime = ''
-        console.log(this.startTime)
       },
       clearEndtime () {
         this.endTime = ''
@@ -209,6 +206,7 @@ import Loading from 'base/loading/loading'
           this.page =1
           this.bedNumber= ''
           this.wardNumber = ''
+          this.surplus = ''
           this.endTime = ''
           this.startTime = ''
           let that = this

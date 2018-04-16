@@ -30,6 +30,7 @@
 2. 创建分支 git branch temp-test2 '页面骨架搭建'
 3. 创建分支 git branch temp-test3 '页面登录'
 4. 创建分支 git brach temp-test4 'Home页面开发'
+5. 创建分支 git branch temp-test6 '完善页面和接口对接'
    导航优化 二级菜单可折叠
 
 ## 登录页面开发
@@ -65,7 +66,32 @@
   ```
     1. 页面样式编写
     2. 数据交互
+    3. 修改完成之后 跳转到登录页面
   ```
+## 设备管理页面开发
+    添加设备 --ok
+    删除设备 
+    修改设备
+    http://localhost:8080/mcim-webservice/devices/{deviceId} 提交方式：PUT 参数：deviceTypeCode  deviceName  deviceCode
+    查询设备
+    设备数据渲染
+## 设备位置管理页面开发
+    添加设备位置
+    获取设备号 --- 异步操作问题
+    删除设备   --- 删除样式修改 默认蓝色
+    修改设备   ---弹出框参数修改
+    查询设备   --- 添加token
+    设备数据渲染 ---去除病区字段
+## 体温数据查询管理页面开发
+    设备数据渲染 ---去除病区字段
+## 输液监控数据查询管理页面开发
+    表格渲染
+    查询字段设置
+## 登录页面开发
+   数据对接
+   http://192.168.0.100/mcim-webservice/login 
+   提交方式：post  
+   参数：username password exp (0:20分钟 1:7天) 默认为1   
 ## Build Setup
 
 ``` bash
@@ -84,4 +110,7 @@ npm run build --report
 ## 相关问题
   1. vue click 事件 会点击子元素 利用index
   2. 只要异步动态获取数据 要用loading加载
+## 细节完善
+  1.添加token
+  
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).

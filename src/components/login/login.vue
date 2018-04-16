@@ -56,6 +56,11 @@ import Loading from 'base/loading/loading'
         
       }
     },
+    created (){
+      this.$store.commit('setLogin','')
+      this.$store.commit('changeheadText','')  
+      this.$store.commit('setToken','')  
+    },
     methods: {
       onSubmit() {
         this.isLogin = false
@@ -74,15 +79,16 @@ import Loading from 'base/loading/loading'
           this.loginform.password.verify = true
           return
         }
+        data.exp = 1
       this.isLogin = true
       // 提交数据
       toLogin(data).then((res)=>{
-        
-        console.log('res',res.data)
-          if(res.data.code == 0) {
+          if(res.code == '200') {
             this.verify = false
             this.isLogin = false
-            sessionStorage.setItem('login','login')
+            this.$store.commit('setLogin','login')
+            this.$store.commit('changeheadText',res.inpatientAreaName)
+            this.$store.commit('setToken',res.token)
             this.$router.push('/home')
           }else if(res.data.code == -1){
            this.verify = true
@@ -90,6 +96,7 @@ import Loading from 'base/loading/loading'
           }
       }).catch((err) => {
           console.log(err)
+          this.isLogin = false
       })
       }
     },

@@ -4,6 +4,7 @@ import 'babel-polyfill'
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store/store'
 import HappyScroll from 'vue-happy-scroll'
 import 'vue-happy-scroll/docs/happy-scroll.css'
 import 'font-awesome/css/font-awesome.css'
@@ -15,6 +16,7 @@ Vue.use(HappyScroll)
 new Vue({
   el: '#app',
   router,
+  store,
   components: {
     App
   },

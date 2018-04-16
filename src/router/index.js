@@ -27,7 +27,7 @@ export default new Router({
     {
       path:'/home',
       component: Home,
-      redirect: '/home/temp',
+      redirect: '/home/device',
       children: [
         {
           path: 'temp',

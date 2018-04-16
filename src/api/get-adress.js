@@ -12,7 +12,21 @@ export function getLocation (data) {
 export function addDevicePos (data) {
   let url = BASEURL + 'devicePositions'
   url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)
-  return axios.get(url).then((res) => {
+  return axios.post(url).then((res) => {
+    return Promise.resolve(res.data)
+  })
+}
+export function editDevicePos (devicePositionId,data) {
+  let url = BASEURL + 'devicePositions/'+ devicePositionId
+  url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)
+  return axios.put(url).then((res) => {
+    return Promise.resolve(res.data)
+  })
+}
+export function removeDevicePos (devicePositionId,data) {
+  let url = BASEURL + 'devicePositions/' + devicePositionId
+  url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)
+  return axios.delete(url).then((res) => {
     return Promise.resolve(res.data)
   })
 }

@@ -26,7 +26,7 @@
       <div class="temp-table-header"> 
         <h1>
           <span  @click="export2Excel()"><i class="fa fa-download"></i> 导出数据</span>
-          <span class="btn-add" @click="messageShow=true"><i class="fa fa-plus"></i> 新增设备</span>
+          <span class="btn-add" @click="showadd()"><i class="fa fa-plus"></i> 新增设备</span>
           </h1>
       </div>
       <div class="temp-table-content">
@@ -38,7 +38,7 @@
               <th>设备名称</th>
               <th>设备类型</th>      
               <th>状态</th>
-              <th>备注</th>
+              <th width='200px'>操作</th>
             </tr>
           </thead>
           <tbody>
@@ -49,7 +49,10 @@
               <th>{{item.deviceName}}</th>
               <th>{{item.deviceTypeName}}</th>
               <th :style="{color:item.status == 1 ? '#67C23A':'#F56C6C'}">{{item.status|formatStatus}}</th>
-              <th>{{item.remark}}</th>
+              <th>
+                <span class="fa fa-pencil-square-o edit" @click="modifyDevice(item)">修改</span>
+                <span class="fa fa-times danger" @click="removeDevice(item)">删除</span>
+              </th>
             </tr>
           </tbody>
           <tfoot>
@@ -68,25 +71,28 @@
           <loading title=""></loading>
         </div>
         <!-- message-box-新增位置管理 -->
-        <message-box title="新增设备" @hide="messageShow=false" v-if="messageShow"> 
+        <message-box :title="mBox.title" @hide="messageShow=false" v-if="messageShow"> 
           <form class="add-form">
-            <div class="add-form-item-label">
+            <div class="add-form-item-select" v-if="mBox.title=='新增设备' || mBox.title=='修改设备'">
               <label for="deviceType">选择设备类型</label>
-              <span>输液监控器</span>
-              <t-radio value="01" v-model="add.deviceTypeCode"></t-radio>
-              <span>体温计</span> 
-              <t-radio value="03" v-model="add.deviceTypeCode"></t-radio> 
+               <v-select :list="deviceCodeList" v-model="add.deviceTypeCode" :valueItem='valueItem'></v-select> 
             </div>
-            <div class="add-form-item-input">
+            <div class="add-form-item-input"  v-if="mBox.title=='新增设备' || mBox.title=='修改设备'">
               <label for="wardNumber">填写设备名称</label>
               <input type="text" v-model="add.deviceName" class="input" required>
             </div>
-            <div class="add-form-item-input">
+            <div class="add-form-item-input"  v-if="mBox.title=='新增设备' || mBox.title=='修改设备'">
               <label for="bedNumber">填写设备编号</label>
               <input type="text" v-model="add.deviceCode" class="input" required>
             </div>
+            <div class="add-form-del" v-if="mBox.title=='删除设备'">
+              确定删除么？
+            </div>
             <div>
-              <button class="btn btn-submit" @click="addDevice()">提交</button>
+              <button v-if="mBox.title=='新增设备'" class="btn btn-submit" @click="addDevice()">提交</button>
+              <button v-if="mBox.title=='修改设备'" class="btn btn-submit" @click="editDevice()">修改</button>
+              <button v-if="mBox.title=='删除设备'" class="btn btn-submit btn-del" @click="delDevice()">确定</button>
+              <button v-if="mBox.title=='删除设备'" class="btn btn-submit btn-del cancle" @click="undelDevice()">取消</button>
             </div>
           </form>
         </message-box>
@@ -98,7 +104,7 @@
 </template>
 
 <script>
-import {getDevice} from 'api/getDevice'
+import {getDevice, addDevice, editDevice, removeDevice} from 'api/getDevice'
 import Page from 'base/page/page'
 import Loading from 'base/loading/loading'
 import MessageBox from 'base/message-box/message-box'
@@ -123,12 +129,21 @@ import VNotice from 'base/v-notice/v-notice'
           {text:'体温计',value:'03'},
         ],
         add: {
-          deviceTypeCode: '01',  // 设备类型
+          deviceTypeCode: '',  // 设备类型
           deviceName: '',  // 设备名称
-          deviceCode:''     // 设备编号
+          deviceCode:'' ,    // 设备编号,
+          deviceId:''
         },
-        deviceCodeList:[],
+        deviceCodeList:[
+          {text:'输液监控器',value:'01'},
+          {text:'体温计',value:'03'}
+          ],
         messageShow: false,
+        // 弹出框config
+        valueItem:'',
+        mBox:{
+          title:'',
+        },
         notice:{
           type:'',
           info:'',
@@ -181,7 +196,7 @@ import VNotice from 'base/v-notice/v-notice'
           }
         getDevice(mydata).then((data) => {
          this.isloading = false
-         console.log(data)
+        //  console.log(data)
           if( data.code == '200') {
             this.total = data.total
             this.tableData = data.data
@@ -192,9 +207,14 @@ import VNotice from 'base/v-notice/v-notice'
             this.tableData = []
           }
         }).catch((err)=>{
-          console.log(err)
+          // console.log(err)
           this.isloading = false
         })
+      },
+      showadd(){
+        this.messageShow=true
+        this.mBox.title=`新增设备`
+        this.clearData()
       },
       // 提交新设备
       addDevice () {
@@ -203,32 +223,132 @@ import VNotice from 'base/v-notice/v-notice'
           deviceName: this.add.deviceName,
           deviceCode: this.add.deviceCode
         }
-        console.log(mydata)
+        // console.log(mydata)
         // 参数验证
         if (this.add.deviceName.length == 0){return}
         if (this.add.deviceCode.length == 0){return}
 
+        let that = this
         
         // 提交
         this.notice.type = 'loading'
         this.notice.info = '提交中'
-        // addDevice(mydata).then((res)=>{
-        //   if (res.code == '200') {
-        //     console.log('添加成功')
-        //   }else {
-        //     // 添加失败
-        //   }
-        // })
-        // 模拟
+        addDevice(mydata).then((res)=>{
+          if (res.code == '200') {
+            // console.log('添加成功')
+            that.notice.type = 'success'
+            that.notice.info = '提交成功'
+             that.refreshTable()
+            setTimeout(()=>{
+              that.notice.type = ''
+              that.notice.info = ''
+              that.messageShow = false
+             
+            },1000)
+          }else {
+            that.notice.type = 'error'
+            that.notice.info = '添加失败'
+            setTimeout(()=>{
+              that.notice.type = ''
+              that.notice.info = ''
+            },1000)
+          }
+        })
+      },
+      editDevice(){
+        let mydata = {
+          deviceTypeCode: this.add.deviceTypeCode,
+          deviceName: this.add.deviceName,
+          deviceCode: this.add.deviceCode
+        }
+        // console.log(mydata)
+        // 参数验证
+        if (this.add.deviceName.length == 0){return}
+        if (this.add.deviceCode.length == 0){return}
+
         let that = this
-        setTimeout(function(){
-        that.notice.type = 'success'
-        that.notice.info = '提交成功'
-        setTimeout(()=>{
-        that.notice.type = ''
-        that.notice.info = ''
-        },1000)
-        },3000)
+        // 提交
+        this.notice.type = 'loading'
+        this.notice.info = '提交中'
+        editDevice(this.add.deviceId,mydata).then((res)=>{
+          if (res.code == '200') {
+            // console.log('添加成功')
+            that.notice.type = 'success'
+            that.notice.info = '修改成功'
+            that.refreshTable()
+            setTimeout(()=>{
+              that.notice.type = ''
+              that.notice.info = ''
+              that.messageShow = false
+              that.clearData()
+            },1000)
+          }else {
+            that.notice.type = 'error'
+            that.notice.info = '修改失败'
+            that.clearData()
+            setTimeout(()=>{
+              that.notice.type = ''
+              that.notice.info = ''
+            },1000)
+          }
+        })        
+      },
+      clearData () {
+        this.add.deviceTypeCode = ''
+        this.add.deviceName = ''
+        this.add.deviceCode = ''
+        this.add.deviceId = ''
+        this.valueItem ='1'
+      },
+      // 修改设备
+      modifyDevice (item) {
+        console.log(item)
+        this.messageShow=true
+        this.mBox.title=`修改设备`
+        // 填充参数
+        this.add.deviceTypeCode = item.deviceTypeName =='输液监控器' ? '03': "01"
+        this.add.deviceName = item.deviceName
+        this.add.deviceCode = item.deviceCode
+        this.add.deviceId = item.deviceId
+        this.valueItem = `${item.deviceTypeName} `
+      },
+      // 删除设备
+      removeDevice(item) {
+        this.messageShow=true
+        this.mBox.title=`删除设备`
+        this.add.deviceId = item.deviceId 
+      },
+      // 提交删除
+      delDevice() {
+        let that = this
+        // 提交
+        this.notice.type = 'loading'
+        this.notice.info = '删除中'
+        removeDevice(this.add.deviceId).then((res)=>{
+          if (res.code == '200') {
+            // console.log('添加成功')
+            that.notice.type = 'success'
+            that.notice.info = '删除成功'
+            that.refreshTable()
+            setTimeout(()=>{
+              that.notice.type = ''
+              that.notice.info = ''
+              that.messageShow = false
+              that.clearData()
+            },1000)
+          }else {
+            that.notice.type = 'error'
+            that.notice.info = '删除失败'
+            setTimeout(()=>{
+              that.notice.type = ''
+              that.notice.info = ''
+            },1000)
+          }
+        }) 
+      },
+      undelDevice(){
+        this.messageShow = false
+        this.clearData
       },
       export2Excel() {
       　　require.ensure([], () => {

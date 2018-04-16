@@ -22,7 +22,7 @@
       <div class="temp-table-header"> 
         <h1>
           <span  @click="export2Excel()"><i class="fa fa-download"></i> 导出数据</span>
-          <span class="btn-add" @click="messageShow=true"><i class="fa fa-plus"></i> 新增设备位置</span>
+          <span class="btn-add" @click="showadd()"><i class="fa fa-plus"></i> 新增设备位置</span>
           </h1>
       </div>
       <div class="temp-table-content">
@@ -34,31 +34,26 @@
               <th>设备名称</th>
               <th>病房号</th>
               <th>床号</th>
-              <th>病区</th>
-              <th>操作</th>
+              <th width='200px'>操作</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th>
-                <span class="fa fa-pencil-square-o edit">修改</span>
-                <span class="fa fa-trash-o danger" @click="alertShow=true">删除</span>
-              </th>
-            </tr>
-            <tr  v-if="onData"><th colspan="7" class="no-data">没有相关数据</th></tr>
+            <tr  v-if="onData"><th colspan="6" class="no-data">没有相关数据</th></tr>
             <tr v-for="(item, index) in tableData" :key="index">
               <th>{{item.devicePositionId}}</th>
               <th>{{item.deviceCode}}</th>
               <th>{{item.deviceName}}</th>
               <th>{{item.wardNumber}}</th>
               <th>{{item.bedNumber}}</th>
-              <th>{{item.inpatientAreaName}}</th>
-              <th><span class="fa fa-pencil-square-o edit">修改</span><span class="fa fa-trash-o danger">删除</span></th>
+              <th>
+                <span class="fa fa-pencil-square-o edit" @click="modifyDevice(item)">修改</span>
+                <span class="fa fa-times danger" @click="removeDevice(item)">删除</span>
+              </th>
             </tr>
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="6"><page :total="total" :current-page="page" @pagechange='pagechange'></page></td>
+              <td colspan="5"><page :total="total" :current-page="page" @pagechange='pagechange'></page></td>
               <td colspan="1" class="item-switch-re">
                 <div class="item">
                   <span class="item-label btn-refresh" @click="refreshTable()">刷新</span>
@@ -68,33 +63,36 @@
           </tfoot>
         </table>
         <!-- loading -->
-        <!-- <div v-show="isloading && !total" class="loading-container">
+        <div v-show="isloading && !total" class="loading-container">
           <loading title=""></loading>
-        </div> -->
+        </div>
         <!-- message-box-新增位置管理 -->
         <message-box title="新增位置管理" @hide="messageShow=false" v-if="messageShow"> 
           <form class="add-form">
-            <div class="add-form-item-label">
+            <div class="add-form-item-select" v-if="mBox.title=='新增设备位置' || mBox.title=='修改设备位置'">
               <label for="deviceType">选择设备类型</label>
-              <span>输液监控器</span>
-              <t-radio value="01" v-model="deviceType"></t-radio>
-              <span>体温计</span> 
-              <t-radio value="03" v-model="deviceType"></t-radio> 
+              <v-select :list="options" v-model="deviceType" :valueItem='valueItem'></v-select> 
             </div>
-            <div class="add-form-item-select">
-              <label for="deviceCode">选择设备号</label>
-              <v-select :list="deviceCodeList" v-model="add.deviceCode"></v-select>
+            <div class="add-form-item-select" v-if="mBox.title=='新增设备位置' || mBox.title=='修改设备位置'">
+              <label for="deviceCode">选择设备编号</label>
+              <v-select :list="deviceCodeList" v-model="add.deviceCode" :valueItem='valueItem1'></v-select>
             </div>
-            <div class="add-form-item-input">
-              <label for="wardNumber">填写病房号</label>
+            <div class="add-form-item-input" v-if="mBox.title=='新增设备位置' || mBox.title=='修改设备位置'">
+              <label for="wardNumber">填写房号</label>
               <input type="text" v-model="add.wardNumber" class="input" required>
             </div>
-            <div class="add-form-item-input">
-              <label for="bedNumber">填写病床号</label>
+            <div class="add-form-item-input" v-if="mBox.title=='新增设备位置' || mBox.title=='修改设备位置'">
+              <label for="bedNumber">填写床号</label>
               <input type="text" v-model="add.bedNumber" class="input" required>
             </div>
+            <div class="add-form-del" v-if="mBox.title=='删除设备位置'">
+              确定删除么？
+            </div>
             <div>
-              <button class="btn btn-submit" @click="addDevicePos()">提交</button>
+              <button v-if="mBox.title=='新增设备位置'" class="btn btn-submit" @click="addDevicePos()">提交</button>
+              <button v-if="mBox.title=='修改设备位置'" class="btn btn-submit" @click="editDevice()">修改</button>
+              <button v-if="mBox.title=='删除设备位置'" class="btn btn-submit btn-del" @click="delDevice()">确定</button>
+              <button v-if="mBox.title=='删除设备位置'" class="btn btn-submit btn-del cancle" @click="undelDevice()">取消</button>
             </div>
           </form>
         </message-box>
@@ -107,7 +105,7 @@
   </div>
 </template>
 <script>
-import {getLocation, addDevicePos} from 'api/get-adress'
+import {getLocation, addDevicePos, editDevicePos, removeDevicePos} from 'api/get-adress'
 import {getDevice} from 'api/getDevice'
 import Page from 'base/page/page'
 import Loading from 'base/loading/loading'
@@ -132,11 +130,13 @@ import VNotice from 'base/v-notice/v-notice'
           {text:'输液监控器',value:'01'},
           {text:'体温计',value:'03'},
         ],
-        deviceType: '01' , // 设备类型
+        deviceType: '' , // 设备类型
         add: {
           deviceCode: '',  // 设备号
           wardNumber: '',  // 病房号
-          bedNumber:''     // 病床号
+          bedNumber:'',     // 病床号
+          devicePositionId:'',
+          deviceId:''
         },
         deviceCodeList:[],
         messageShow: false,
@@ -147,7 +147,12 @@ import VNotice from 'base/v-notice/v-notice'
         dialogOption:{
           title: "确定删除?"
         },
-        showDialog:true
+        showDialog:true,
+        valueItem:'',
+        valueItem1:'',
+        mBox:{
+          title:'',
+        },
       }
     },
     components: {
@@ -162,7 +167,7 @@ import VNotice from 'base/v-notice/v-notice'
     methods: {
       pagechange (value) {
         this.page = value
-        this.getDeviceData()
+        this.getLocationData()
       },
       // 刷新表格
       refreshTable(){
@@ -207,7 +212,11 @@ import VNotice from 'base/v-notice/v-notice'
       getDeviceCode () {
         getDevice({deviceTypeCode: this.deviceType}).then((res)=>{
            if (res.code == '200') {
-              this.deviceCodeList = res.data
+             res.data.forEach((item,index)=>{
+               this.deviceCodeList[index] = new Object()
+               this.deviceCodeList[index].text =  item.deviceName
+               this.deviceCodeList[index].value =  item.deviceId
+             })
            } else {
              this.deviceCodeList = ''
            }
@@ -220,37 +229,153 @@ import VNotice from 'base/v-notice/v-notice'
           bedNumber: this.add.bedNumber,
           deviceId: this.add.deviceCode
         }
-        console.log(mydata)
         // 参数验证
         if (this.add.wardNumber.length == 0){return}
         if (this.add.bedNumber.length == 0){return}
         if (this.add.deviceCode.length == 0){return}
-
-        
+        let that = this   
         // 提交
         this.notice.type = 'loading'
         this.notice.info = '提交中'
-        // addDevicePos().then((res)=>{
-        //   if (res.code == '200') {
-        //     console.log('添加成功')
-        //   }else {
-        //     // 添加失败
-        //   }
-        // })
-        // 模拟
-        let that = this
-        setTimeout(function(){
-        that.notice.type = 'success'
-        that.notice.info = '提交成功'
-        setTimeout(()=>{
-        that.notice.type = ''
-        that.notice.info = ''
-        },1000)
-        },3000)
-
+        addDevicePos(mydata).then((res)=>{
+          if (res.code == '200') {
+            that.notice.type = 'success'
+            that.notice.info = '提交成功'
+             that.refreshTable()
+            setTimeout(()=>{
+              that.notice.type = ''
+              that.notice.info = ''
+              that.messageShow = false
+             
+            },1000)
+          }else {
+            that.notice.type = 'error'
+            that.notice.info = '添加失败'
+            setTimeout(()=>{
+              that.notice.type = ''
+              that.notice.info = ''
+            },1000)
+          }
+        })
       },
-      // 删除 
-      deleteRow () {
+     showadd(){
+        this.messageShow=true
+        this.mBox.title=`新增设备位置`
+        this.clearData()
+      },
+      editDevice(){
+        let mydata = {
+          wardNumber: this.add.wardNumber,
+          bedNumber: this.add.bedNumber,
+          deviceId: this.add.deviceId
+        }
+        // console.log(mydata)
+        // 参数验证
+        if (this.add.wardNumber.length == 0){return}
+        if (this.add.bedNumber.length == 0){return}
+
+        let that = this
+        // 提交
+        this.notice.type = 'loading'
+        this.notice.info = '提交中'
+        editDevicePos(this.add.devicePositionId,mydata).then((res)=>{
+          if (res.code == '200') {
+            // console.log('添加成功')
+            that.notice.type = 'success'
+            that.notice.info = '修改成功'
+            that.refreshTable()
+            setTimeout(()=>{
+              that.notice.type = ''
+              that.notice.info = ''
+              that.messageShow = false
+              that.clearData()
+            },1000)
+          }else {
+            that.notice.type = 'error'
+            that.notice.info = '修改失败'
+            that.clearData()
+            setTimeout(()=>{
+              that.notice.type = ''
+              that.notice.info = ''
+            },1000)
+          }
+        })        
+      },
+      clearData () {
+        this.add.deviceCode = ''
+        this.add.wardNumber = ''
+        this.add.bedNumber = ''
+        this.add.deviceId = ''
+        this.valueItem =''
+        this.valueItem1 =''
+        this.add.devicePositionId =''
+      },
+      // 修改设备
+      modifyDevice (item) {
+        console.log(item)
+       
+        this.mBox.title=`修改设备位置`
+        // 填充参数
+        // 根据设备号获取设备类型
+        let deviceTypeName = ''
+        getDevice({deviceCode: item.deviceCode}).then((res)=>{
+           if (res.code == '200') {
+             console.log(res)
+             let deviceTypeCode = res.data[0].deviceTypeName =='输液监控器' ? '03': "01"
+             let deviceTypeName = res.data[0].deviceTypeName
+             let  deviceId = res.data[0].deviceId
+             this.getDeviceCode()
+             return Promise.resolve({deviceTypeName,deviceTypeCode,deviceId})
+           }
+        }).then((data)=>{
+           console.log(data)
+            this.add.deviceTypeCode = data.deviceTypeCode
+            this.add.wardNumber = item.wardNumber
+            this.add.bedNumber = item.bedNumber
+            this.add.deviceId = data.deviceId
+            this.add.devicePositionId = item.devicePositionId
+            this.valueItem = `${data.deviceTypeName}`
+            this.valueItem1 = data.deviceId
+            this.messageShow=true
+        })
+      },
+      // 删除设备
+      removeDevice(item) {
+        this.messageShow=true
+        this.mBox.title=`删除设备位置`
+        this.add.devicePositionId = item.devicePositionId 
+      },
+      // 提交删除
+      delDevice() {
+        let that = this
+        // 提交
+        this.notice.type = 'loading'
+        this.notice.info = '删除中'
+        removeDevicePos(this.add.devicePositionId).then((res)=>{
+          if (res.code == '200') {
+            // console.log('添加成功')
+            that.notice.type = 'success'
+            that.notice.info = '删除成功'
+            that.refreshTable()
+            setTimeout(()=>{
+              that.notice.type = ''
+              that.notice.info = ''
+              that.messageShow = false
+              that.clearData()
+            },1000)
+          }else {
+            that.notice.type = 'error'
+            that.notice.info = '删除失败'
+            setTimeout(()=>{
+              that.notice.type = ''
+              that.notice.info = ''
+            },1000)
+          }
+        }) 
+      },
+      undelDevice(){
+        this.messageShow = false
+        this.clearData
       },
       export2Excel() {
       　　require.ensure([], () => {
@@ -268,13 +393,7 @@ import VNotice from 'base/v-notice/v-notice'
     },
     created () {
       this.getLocationData()
-              this.getLocationData()
-        // 数据模拟
-        if (this.deviceType == '01') {
-          this.deviceCodeList = ['001','002','003','004','005','006','007']
-        } else if (this.deviceType=='03'){
-          this.deviceCodeList = ['0301','0321','0366','0366']
-        }
+      this.getLocationData()
     },
     watch: {
       pagechange (value) {
@@ -283,13 +402,8 @@ import VNotice from 'base/v-notice/v-notice'
       },
       deviceType (value) {
         // 根据设备类型请求设备号
-        this.getLocationData()
+        this.getDeviceCode()
         // 数据模拟
-        if (value == '01') {
-          this.deviceCodeList = ['001','002','003','004','005']
-        } else if (value=='03'){
-          this.deviceCodeList = ['0301','0321','0366','0366']
-        }
       }
     },
     mounted () {

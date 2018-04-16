@@ -3,7 +3,7 @@
     <input type="text" v-model="sData" @click='listShow = !listShow' class="input">
     <div v-show="listShow" class="v-select-list" ref="selectWrapper">
       <ul>
-        <li v-for="(item,index) in list " :value="index" @click="onItemclick(index)" :key="index">{{item}}</li>
+        <li v-for="(item,index) in list " :value="index" @click="onItemclick(index)" :key="index">{{item.text}}({{item.value}})</li>
       </ul>
     </div>  
   </div>
@@ -24,19 +24,23 @@ export default {
     model: {
       type: [String, Number],
       require: true
+    },
+    valueItem: {
+      type: [String, Number, Object],
+      default:''
     }
   },
   data () {
     return {
-      sData: '',
+      sData:this.valueItem,
       listShow: false,
     }
   },
   methods: {
     onItemclick(value) {
-      this.sData = this.list[value]
+      this.sData = this.list[value].text
       this.listShow = false
-      this.$emit('change',this.list[value])
+      this.$emit('change',this.list[value].value)
     }
   },
   created(){
@@ -56,7 +60,8 @@ export default {
   position relative
 .v-select-list
   width 100%
-  height 200px
+  max-height 160px
+  // height 100px
   overflow-y auto
   background #ffffff
   border 1px
@@ -66,6 +71,7 @@ export default {
   border: 1px solid;
   border-color: #d6d6d6;
   position absolute
+  z-index 1
 .v-select-list ul
   width 100%
   li

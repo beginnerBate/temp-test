@@ -7,4 +7,4 @@ export const commonParams = {
 }
 export const ERR_OK = 200
 
-export const BASEURL = 'http://192.168.0.100:8080/mcim-webservice/'
+export const BASEURL = 'http://192.168.0.100:80/mcim-webservice/'

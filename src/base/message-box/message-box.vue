@@ -51,8 +51,8 @@ export default {
   text-align left 
   font-size 14px
   white-space normal
-  width 758px
-  height 569px
+  // width 500px
+  // height 400px
   background #ffffff
 .message-box-header
   display flex
