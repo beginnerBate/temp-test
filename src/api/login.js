@@ -1,17 +1,13 @@
 import axios from 'axios'
-import {BASEURL} from './config'
+import {getUrl,param} from './config'
 export function toLogin (data) {
-  let url = BASEURL+'login'
-  url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)
-  return axios.post(url).then((res) => {
-    return Promise.resolve(res.data)
+  return getUrl().then((BASEURL)=>{
+    let url = BASEURL+'login'
+    url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)
+    return axios.post(url).then((res) => {
+      return Promise.resolve(res.data)
+    },(err)=>{
+      return Promise.reject(err)
+    })
   })
-}
-export function param(data) {
-  let url = ''
-  for (var k in data) {
-    let value = data[k] !== undefined ? data[k] : ''
-    url += '&' + k + '=' + encodeURIComponent(value)
-  }
-  return url ? url.substring(1) : ''
 }

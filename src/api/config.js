@@ -1,10 +1,24 @@
-export const commonParams = {
-  g_tk: 1928093487,
-  inCharset: 'utf-8',
-  outCharset: 'utf-8',
-  notice: 0,
-  format: 'jsonp'
-}
+import axios from 'axios'
+import loS from '@/common/js/loStorage'
 export const ERR_OK = 200
 
-export const BASEURL = 'http://192.168.0.100:80/mcim-webservice/'
+export function getUrl (port="port") {
+  return axios.get('static/config.json').then((res)=>{
+    return Promise.resolve(res.data[port])
+  })
+}
+
+export function param(data) {
+  let url = ''
+  for (var k in data) {
+    let value = data[k] !== undefined ? data[k] : ''
+    url += '&' + k + '=' + encodeURIComponent(value)
+  }
+  return url ? url.substring(1) : ''
+}
+
+export const Axios = axios.create({
+  headers:{
+    token:loS.getItem('token',true)
+  }
+})

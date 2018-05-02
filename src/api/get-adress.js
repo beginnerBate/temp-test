@@ -1,40 +1,50 @@
 //  设备管理 json数据获取
-import {BASEURL} from './config'
+import {getUrl,Axios,param} from './config'
 import axios from 'axios'
 export function getLocation (data) {
-  let url = BASEURL + 'devicePositions'
-  url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)
-  return axios.get(url).then((res) => {
-    return Promise.resolve(res.data)
+  return getUrl().then((BASEURL)=>{
+    let url = BASEURL + 'devicePositions'
+    url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)
+    return Axios.get(url).then((res) => {
+      return Promise.resolve(res.data)
+    })
+  })
+}
+//  根据设备号获取信息
+export function devicePositions (id) {
+  return getUrl('test').then((BASEURL)=>{
+    let url = BASEURL + `devicePositions/${id}`
+    return Axios.get(url).then((res) => {
+      return Promise.resolve(res.data)
+    })
   })
 }
 // 提交新增位置
 export function addDevicePos (data) {
-  let url = BASEURL + 'devicePositions'
-  url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)
-  return axios.post(url).then((res) => {
-    return Promise.resolve(res.data)
+  return getUrl().then((BASEURL)=>{
+    let url = BASEURL + 'devicePositions'
+    url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)
+    return Axios.post(url).then((res) => {
+      return Promise.resolve(res.data)
+    })
   })
 }
 export function editDevicePos (devicePositionId,data) {
-  let url = BASEURL + 'devicePositions/'+ devicePositionId
-  url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)
-  return axios.put(url).then((res) => {
-    return Promise.resolve(res.data)
+  return getUrl().then((BASEURL)=>{
+    let url = BASEURL + 'devicePositions/'+ devicePositionId
+    url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)
+    return Axios.put(url).then((res) => {
+      return Promise.resolve(res.data)
+    })
   })
+
 }
 export function removeDevicePos (devicePositionId,data) {
-  let url = BASEURL + 'devicePositions/' + devicePositionId
-  url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)
-  return axios.delete(url).then((res) => {
-    return Promise.resolve(res.data)
+  return getUrl().then((BASEURL)=>{
+    let url = BASEURL + 'devicePositions/' + devicePositionId
+    url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)
+    return Axios.delete(url).then((res) => {
+      return Promise.resolve(res.data)
+    })
   })
-}
-export function param(data) {
-  let url = ''
-  for (var k in data) {
-    let value = data[k] !== undefined ? data[k] : ''
-    url += '&' + k + '=' + encodeURIComponent(value)
-  }
-  return url ? url.substring(1) : ''
 }

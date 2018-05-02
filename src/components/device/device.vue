@@ -67,7 +67,7 @@
           </tfoot>
         </table>
         <!-- loading -->
-        <div v-show="isloading && !total" class="loading-container">
+        <div v-show="isloading" class="loading-container">
           <loading title=""></loading>
         </div>
         <!-- message-box-新增位置管理 -->
@@ -174,7 +174,7 @@ import VNotice from 'base/v-notice/v-notice'
       },
       // 刷新表格
       refreshTable(){
-        this.page = 1
+        // this.page = 1
         this.deviceTypeCode = ''
         this.deviceName = ''
         this.deviceCode = ''
@@ -285,10 +285,11 @@ import VNotice from 'base/v-notice/v-notice'
           }else {
             that.notice.type = 'error'
             that.notice.info = '修改失败'
-            that.clearData()
+            
             setTimeout(()=>{
               that.notice.type = ''
               that.notice.info = ''
+              that.clearData()
             },1000)
           }
         })        
@@ -298,7 +299,7 @@ import VNotice from 'base/v-notice/v-notice'
         this.add.deviceName = ''
         this.add.deviceCode = ''
         this.add.deviceId = ''
-        this.valueItem ='1'
+        this.valueItem =''
       },
       // 修改设备
       modifyDevice (item) {
@@ -306,7 +307,8 @@ import VNotice from 'base/v-notice/v-notice'
         this.messageShow=true
         this.mBox.title=`修改设备`
         // 填充参数
-        this.add.deviceTypeCode = item.deviceTypeName =='输液监控器' ? '03': "01"
+        console.log(item.deviceTypeName)
+        this.add.deviceTypeCode = item.deviceTypeName =='输液监控器' ? '01': "03"
         this.add.deviceName = item.deviceName
         this.add.deviceCode = item.deviceCode
         this.add.deviceId = item.deviceId

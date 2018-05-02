@@ -39,7 +39,7 @@ export default {
         {
           name:'位置管理',
           url:'/home/place',
-          icon:'fa-gavel'
+          icon:'fa-location-arrow'
         },
         {
           name:'数据查询',

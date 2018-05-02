@@ -63,19 +63,20 @@
           </tfoot>
         </table>
         <!-- loading -->
-        <div v-show="isloading && !total" class="loading-container">
+        <div v-show="isloading" class="loading-container">
           <loading title=""></loading>
         </div>
         <!-- message-box-新增位置管理 -->
         <message-box title="新增位置管理" @hide="messageShow=false" v-if="messageShow"> 
           <form class="add-form">
             <div class="add-form-item-select" v-if="mBox.title=='新增设备位置' || mBox.title=='修改设备位置'">
-              <label for="deviceType">选择设备类型</label>
+              <label for="deviceType">设备类型</label>
               <v-select :list="options" v-model="deviceType" :valueItem='valueItem'></v-select> 
             </div>
             <div class="add-form-item-select" v-if="mBox.title=='新增设备位置' || mBox.title=='修改设备位置'">
-              <label for="deviceCode">选择设备编号</label>
+              <label for="deviceCode">设备编号</label>
               <v-select :list="deviceCodeList" v-model="add.deviceCode" :valueItem='valueItem1'></v-select>
+              <!-- <span>{{add.deviceCode}}</span> -->
             </div>
             <div class="add-form-item-input" v-if="mBox.title=='新增设备位置' || mBox.title=='修改设备位置'">
               <label for="wardNumber">填写房号</label>
@@ -105,7 +106,7 @@
   </div>
 </template>
 <script>
-import {getLocation, addDevicePos, editDevicePos, removeDevicePos} from 'api/get-adress'
+import {getLocation, addDevicePos, editDevicePos, removeDevicePos,devicePositions} from 'api/get-adress'
 import {getDevice} from 'api/getDevice'
 import Page from 'base/page/page'
 import Loading from 'base/loading/loading'
@@ -171,7 +172,7 @@ import VNotice from 'base/v-notice/v-notice'
       },
       // 刷新表格
       refreshTable(){
-        this.page = 1
+        // this.page = 1
         this.wardNumber = ''
         this.bedNumber = ''
         this.deviceCode = ''
@@ -193,7 +194,7 @@ import VNotice from 'base/v-notice/v-notice'
           }
         getLocation(mydata).then((data) => {
          this.isloading = false
-         console.log(data)
+        //  console.log(data)
           if( data.code == '200') {
             this.total = data.total
             this.tableData = data.data
@@ -204,7 +205,7 @@ import VNotice from 'base/v-notice/v-notice'
             this.tableData = []
           }
         }).catch((err)=>{
-          console.log(err)
+          // console.log(err)
           this.isloading = false
         })
       },
@@ -212,13 +213,14 @@ import VNotice from 'base/v-notice/v-notice'
       getDeviceCode () {
         getDevice({deviceTypeCode: this.deviceType}).then((res)=>{
            if (res.code == '200') {
+             this.deviceCodeList.length=0
              res.data.forEach((item,index)=>{
                this.deviceCodeList[index] = new Object()
                this.deviceCodeList[index].text =  item.deviceName
                this.deviceCodeList[index].value =  item.deviceId
              })
            } else {
-             this.deviceCodeList = ''
+             this.deviceCodeList.length=0
            }
         })
       },
@@ -245,8 +247,7 @@ import VNotice from 'base/v-notice/v-notice'
             setTimeout(()=>{
               that.notice.type = ''
               that.notice.info = ''
-              that.messageShow = false
-             
+              that.messageShow = false            
             },1000)
           }else {
             that.notice.type = 'error'
@@ -267,7 +268,7 @@ import VNotice from 'base/v-notice/v-notice'
         let mydata = {
           wardNumber: this.add.wardNumber,
           bedNumber: this.add.bedNumber,
-          deviceId: this.add.deviceId
+          deviceId: this.add.deviceCode
         }
         // console.log(mydata)
         // 参数验证
@@ -312,30 +313,29 @@ import VNotice from 'base/v-notice/v-notice'
       },
       // 修改设备
       modifyDevice (item) {
-        console.log(item)
-       
         this.mBox.title=`修改设备位置`
         // 填充参数
         // 根据设备号获取设备类型
         let deviceTypeName = ''
-        getDevice({deviceCode: item.deviceCode}).then((res)=>{
-           if (res.code == '200') {
-             console.log(res)
-             let deviceTypeCode = res.data[0].deviceTypeName =='输液监控器' ? '03': "01"
-             let deviceTypeName = res.data[0].deviceTypeName
-             let  deviceId = res.data[0].deviceId
-             this.getDeviceCode()
-             return Promise.resolve({deviceTypeName,deviceTypeCode,deviceId})
-           }
-        }).then((data)=>{
-           console.log(data)
+        devicePositions(item.devicePositionId).then((res)=>{
+         if(res.code==200){
+           let deviceTypeCode = res.data.deviceTypeName =='输液监控器' ? '01': "03"
+           let deviceTypeName = res.data.deviceTypeName
+           let deviceName = res.data.deviceName
+            this.getDeviceCode()
+            return Promise.resolve({deviceTypeName,deviceTypeCode,deviceName})
+         }
+        })
+        .then((data)=>{
+          //  console.log(data)
             this.add.deviceTypeCode = data.deviceTypeCode
             this.add.wardNumber = item.wardNumber
             this.add.bedNumber = item.bedNumber
-            this.add.deviceId = data.deviceId
+            this.add.deviceId = item.deviceId
             this.add.devicePositionId = item.devicePositionId
             this.valueItem = `${data.deviceTypeName}`
-            this.valueItem1 = data.deviceId
+            this.valueItem1 = data.deviceName
+            console.log(this.valueItem1)
             this.messageShow=true
         })
       },

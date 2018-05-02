@@ -15,6 +15,7 @@
           <button class="btn btn-submit">登录</button>
           <div class="login-errors">
             <span class="login-info-errors" v-if="verify">账号或密码错误</span>
+            <span class="login-info-errors" v-if="times">登录超时,请检查网络</span>
             <span class="login-info-errors" v-if="loginform.username.verify">请输入用户名</span>
             <span class="login-info-errors" v-if="loginform.password.verify">请输入密码</span>
           </div>
@@ -45,7 +46,8 @@ import Loading from 'base/loading/loading'
           }
         },
         verify: false,
-        isLogin: false
+        isLogin: false,
+        times:false
       }
     },
     components:{
@@ -90,12 +92,14 @@ import Loading from 'base/loading/loading'
             this.$store.commit('changeheadText',res.inpatientAreaName)
             this.$store.commit('setToken',res.token)
             this.$router.push('/home')
-          }else if(res.data.code == -1){
+          }else {
            this.verify = true
            this.isLogin = false
           }
+      },(err)=>{
+           this.times = true
+           this.isLogin = false
       }).catch((err) => {
-          console.log(err)
           this.isLogin = false
       })
       }

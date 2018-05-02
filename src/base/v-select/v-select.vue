@@ -3,7 +3,7 @@
     <input type="text" v-model="sData" @click='listShow = !listShow' class="input">
     <div v-show="listShow" class="v-select-list" ref="selectWrapper">
       <ul>
-        <li v-for="(item,index) in list " :value="index" @click="onItemclick(index)" :key="index">{{item.text}}({{item.value}})</li>
+        <li v-for="(item,index) in list " :value="index" @click="onItemclick(index)" :key="index">{{item.text}}</li>
       </ul>
     </div>  
   </div>
@@ -28,6 +28,13 @@ export default {
     valueItem: {
       type: [String, Number, Object],
       default:''
+    }
+  },
+  watch: {
+    sData(value) {
+      if(value==0) {
+      this.$emit('change',0)        
+      }
     }
   },
   data () {

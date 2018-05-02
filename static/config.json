@@ -1,0 +1,5 @@
+{
+  "port": "http://192.168.0.200:8888/webservice/",
+  "test": "http://192.168.0.100/mcim-webservice/"
+
+}
