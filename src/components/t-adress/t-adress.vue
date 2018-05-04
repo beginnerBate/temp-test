@@ -32,7 +32,8 @@
               <th>序号</th>
               <th>病房号</th>
               <th>床号</th>
-              <th>设备号</th>
+              <th>设备类型</th>
+              <th>设备号</th>            
               <th>设备名称</th>
               <th width='200px'>操作</th>
             </tr>
@@ -43,6 +44,7 @@
               <th>{{(index+1)+((page-1) *row)}}</th>
               <th>{{item.wardNumber}}</th>
               <th>{{item.bedNumber}}</th>
+              <th>{{item.deviceTypeName}}</th>
               <th>{{item.deviceCode}}</th>
               <th>{{item.deviceName}}</th>
               <th>
@@ -53,7 +55,7 @@
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="5"><page :total="total" :current-page="page" @pagechange='pagechange'></page></td>
+              <td colspan="6"><page :total="total" :current-page="page" @pagechange='pagechange'></page></td>
               <td colspan="1" class="item-switch-re">
                 <div class="item">
                   <span class="item-label btn-refresh" @click="refreshTable()">刷新</span>
@@ -275,9 +277,10 @@ import VNotice from 'base/v-notice/v-notice'
         let mydata = {
           wardNumber: this.add.wardNumber,
           bedNumber: this.add.bedNumber,
-          deviceId: this.add.deviceCode
+          deviceId: this.add.deviceCode? this.add.deviceCode : 0
         }
         // console.log(mydata)
+        // alert(mydata.deviceId)
         // 参数验证
         if (this.add.wardNumber.length == 0){return}
         if (this.add.bedNumber.length == 0){return}
@@ -296,12 +299,12 @@ import VNotice from 'base/v-notice/v-notice'
               that.notice.type = ''
               that.notice.info = ''
               that.messageShow = false
-              that.clearData()
+              // that.clearData()
             },1000)
           }else {
             that.notice.type = 'error'
             that.notice.info = '修改失败'
-            that.clearData()
+            // that.clearData()
             setTimeout(()=>{
               that.notice.type = ''
               that.notice.info = ''
@@ -333,7 +336,7 @@ import VNotice from 'base/v-notice/v-notice'
            if (res.data.deviceTypeId==null) {
             deviceTypeCode = ''
             deviceTypeName = ''
-            deviceName = 0
+            deviceName = ''
             deviceId = 0
             this.add.deviceCode = 0
             

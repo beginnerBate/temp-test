@@ -128,4 +128,5 @@ npm run build --report
 <input type="text" autocomplete="off" id="number"/>
 2. Error in beforeDestroy hook: "TypeError: 对象不支持“destroy”属性或方法" ie9
 3. SCRIPT5022: SecurityError ie11 ie10 ie9 
+
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
