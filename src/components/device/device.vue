@@ -19,7 +19,7 @@
           <label>设备号</label>
           <input class="input" type="text" v-model="deviceCode">
         </div>
-        <div class="temp-search-row" style="margin-top: 26px;"><span class="btn btn-search" @click="findData"><i class="fa fa-search"></i>查询</span></div>
+        <div class="temp-search-row" style="margin-top: 26px;"><span class="btn btn-search" @click="findData()"><i class="fa fa-search"></i>查询</span></div>
       </div>
     </div>
     <div class="temp-table">
@@ -44,7 +44,7 @@
           <tbody>
             <tr  v-if="onData"><th colspan="6" class="no-data">没有相关数据</th></tr>
             <tr v-for="(item, index) in tableData" :key="index">
-              <th>{{item.deviceId}}</th>
+              <th>{{(index+1)+((page-1) *row)}}</th>
               <th>{{item.deviceCode}}</th>
               <th>{{item.deviceName}}</th>
               <th>{{item.deviceTypeName}}</th>
@@ -72,7 +72,7 @@
         </div>
         <!-- message-box-新增位置管理 -->
         <message-box :title="mBox.title" @hide="messageShow=false" v-if="messageShow"> 
-          <form class="add-form">
+          <form class="add-form" autocomplete="off">
             <div class="add-form-item-select" v-if="mBox.title=='新增设备' || mBox.title=='修改设备'">
               <label for="deviceType">选择设备类型</label>
                <v-select :list="deviceCodeList" v-model="add.deviceTypeCode" :valueItem='valueItem'></v-select> 
@@ -85,14 +85,14 @@
               <label for="bedNumber">填写设备编号</label>
               <input type="text" v-model="add.deviceCode" class="input" required>
             </div>
-            <div class="add-form-del" v-if="mBox.title=='删除设备'">
-              确定删除么？
+            <div class="add-form-del" v-if="mBox.title=='提示'">
+              确定删除吗？
             </div>
             <div>
-              <button v-if="mBox.title=='新增设备'" class="btn btn-submit" @click="addDevice()">提交</button>
-              <button v-if="mBox.title=='修改设备'" class="btn btn-submit" @click="editDevice()">修改</button>
-              <button v-if="mBox.title=='删除设备'" class="btn btn-submit btn-del" @click="delDevice()">确定</button>
-              <button v-if="mBox.title=='删除设备'" class="btn btn-submit btn-del cancle" @click="undelDevice()">取消</button>
+              <button v-if="mBox.title=='新增设备'" class="btn btn-submit" @click.prevent="addDevice()">提交</button>
+              <button v-if="mBox.title=='修改设备'" class="btn btn-submit" @click.prevent="editDevice()">修改</button>
+              <button v-if="mBox.title=='提示'" class="btn btn-submit btn-del" @click.prevent="delDevice()">确定</button>
+              <button v-if="mBox.title=='提示'" class="btn btn-submit btn-del cancle" @click.prevent="undelDevice()">取消</button>
             </div>
           </form>
         </message-box>
@@ -238,12 +238,11 @@ import VNotice from 'base/v-notice/v-notice'
             // console.log('添加成功')
             that.notice.type = 'success'
             that.notice.info = '提交成功'
-             that.refreshTable()
+            that.refreshTable()
             setTimeout(()=>{
               that.notice.type = ''
               that.notice.info = ''
-              that.messageShow = false
-             
+              that.messageShow = false             
             },1000)
           }else {
             that.notice.type = 'error'
@@ -285,7 +284,6 @@ import VNotice from 'base/v-notice/v-notice'
           }else {
             that.notice.type = 'error'
             that.notice.info = '修改失败'
-            
             setTimeout(()=>{
               that.notice.type = ''
               that.notice.info = ''
@@ -303,7 +301,7 @@ import VNotice from 'base/v-notice/v-notice'
       },
       // 修改设备
       modifyDevice (item) {
-        console.log(item)
+        // console.log(item)
         this.messageShow=true
         this.mBox.title=`修改设备`
         // 填充参数
@@ -314,10 +312,10 @@ import VNotice from 'base/v-notice/v-notice'
         this.add.deviceId = item.deviceId
         this.valueItem = `${item.deviceTypeName} `
       },
-      // 删除设备
+      // 提示
       removeDevice(item) {
         this.messageShow=true
-        this.mBox.title=`删除设备`
+        this.mBox.title=`提示`
         this.add.deviceId = item.deviceId 
       },
       // 提交删除
@@ -368,6 +366,7 @@ import VNotice from 'base/v-notice/v-notice'
     },
     created () {
       this.getDeviceData()
+      // console.log(this.tableData)
     },
     watch: {
       pagechange (value) {

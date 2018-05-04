@@ -1,5 +1,7 @@
-// import axios from 'axios'
-import {getUrl,Axios,param} from './config'
+import axios from 'axios'
+// import loS from '@/common/js/loStorage'
+import {getUrl,param,Axios} from './config'
+
 export function getDevice (data) {
   return getUrl().then((BASEURL)=>{
     let url = BASEURL + 'devices'
@@ -9,7 +11,7 @@ export function getDevice (data) {
     })
   })
 }
-export function addDevice (data) {
+export function addDevice (data) { 
   return getUrl().then((BASEURL)=>{
     let url = BASEURL + 'devices'
     url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)

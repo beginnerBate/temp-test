@@ -43,7 +43,7 @@
           <tbody>
             <tr  v-if="onData"><th colspan="6" class="no-data">没有相关数据</th></tr>
             <tr v-for="(item, index) in tableData" :key="index">
-              <th>{{item.temperatureId}}</th>
+              <th>{{(index+1)+((page-1) *row)}}</th>
               <th>{{item.wardNumber}}</th>
               <th>{{item.bedNumber}}</th>
               <th>{{item.deviceName}}</th>
@@ -204,8 +204,8 @@ import Loading from 'base/loading/loading'
       }
     },
     destroyed () {
-      // 清除定时器
-    clearInterval(this.TimerAjax)
+      // // 清除定时器
+      // clearInterval(this.TimerAjax)
     }
   }
 </script>

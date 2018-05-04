@@ -36,11 +36,11 @@
               <th>病房号</th>
               <th>床号</th>      
               <th>设备名称</th>
-              <th>液瓶容量(毫升)</th>
-              <th>剩余容量(毫升)</th>
+              <th>液瓶容量(mL)</th>
+              <th>剩余容量(mL)</th>
               <th>滴数</th>
-              <th>输液计时(秒)</th>
-              <th>液滴速度(毫升/分钟)</th>
+              <th>输液计时(mL)</th>
+              <th>液滴速度(mL/min)</th>
               <th>监测时间</th>
               <th>状态</th>
             </tr>
@@ -48,7 +48,7 @@
           <tbody>
             <tr  v-if="onData"><th colspan="11" class="no-data">没有相关数据</th></tr>
             <tr v-for="(item, index) in tableData" :key="index">
-              <th>{{item.infusionMonitorId}}</th>
+              <th>{{(index+1)+((page-1) *row)}}</th>
               <th>{{item.wardNumber}}</th>
               <th>{{item.bedNumber}}</th>
               <th>{{item.deviceName}}</th>
@@ -222,7 +222,7 @@ import Loading from 'base/loading/loading'
     },
     destroyed () {
       // 清除定时器
-    clearInterval(this.TimerAjax)
+    // clearInterval(this.TimerAjax)
     }
   }
 </script>

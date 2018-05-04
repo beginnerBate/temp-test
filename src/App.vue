@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <t-header v-if="isHead"></t-header>
+    <t-header v-if="$store.state.isLogin"></t-header>
     <router-view/>
   </div>
 </template>
@@ -11,16 +11,11 @@ export default {
   components: {
     THeader
   },
-  data() {
-    return {
-      isHead: this.$store.state.isLogin
+  computed:{
+    page(){
+      
     }
-  },
-  watch: {
-    $route(newValue, oldValue) {
-      this.isHead = this.$store.state.isLogin
-    }
-  },
+  }
 }
 </script>
 <style lang="stylus">

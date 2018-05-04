@@ -1,6 +1,7 @@
 //  设备管理 json数据获取
-import {getUrl,Axios,param} from './config'
+import {getUrl,param,Axios} from './config'
 import axios from 'axios'
+
 export function getLocation (data) {
   return getUrl().then((BASEURL)=>{
     let url = BASEURL + 'devicePositions'
@@ -12,7 +13,7 @@ export function getLocation (data) {
 }
 //  根据设备号获取信息
 export function devicePositions (id) {
-  return getUrl('test').then((BASEURL)=>{
+  return getUrl().then((BASEURL)=>{
     let url = BASEURL + `devicePositions/${id}`
     return Axios.get(url).then((res) => {
       return Promise.resolve(res.data)

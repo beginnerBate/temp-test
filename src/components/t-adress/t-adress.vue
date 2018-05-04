@@ -30,21 +30,21 @@
           <thead>
             <tr>
               <th>序号</th>
-              <th>设备号</th>
-              <th>设备名称</th>
               <th>病房号</th>
               <th>床号</th>
+              <th>设备号</th>
+              <th>设备名称</th>
               <th width='200px'>操作</th>
             </tr>
           </thead>
           <tbody>
             <tr  v-if="onData"><th colspan="6" class="no-data">没有相关数据</th></tr>
             <tr v-for="(item, index) in tableData" :key="index">
-              <th>{{item.devicePositionId}}</th>
-              <th>{{item.deviceCode}}</th>
-              <th>{{item.deviceName}}</th>
+              <th>{{(index+1)+((page-1) *row)}}</th>
               <th>{{item.wardNumber}}</th>
               <th>{{item.bedNumber}}</th>
+              <th>{{item.deviceCode}}</th>
+              <th>{{item.deviceName}}</th>
               <th>
                 <span class="fa fa-pencil-square-o edit" @click="modifyDevice(item)">修改</span>
                 <span class="fa fa-times danger" @click="removeDevice(item)">删除</span>
@@ -67,14 +67,14 @@
           <loading title=""></loading>
         </div>
         <!-- message-box-新增位置管理 -->
-        <message-box title="新增位置管理" @hide="messageShow=false" v-if="messageShow"> 
-          <form class="add-form">
+        <message-box :title="mBox.title" @hide="messageShow=false" v-if="messageShow"> 
+          <form class="add-form" autocomplete="off">
             <div class="add-form-item-select" v-if="mBox.title=='新增设备位置' || mBox.title=='修改设备位置'">
               <label for="deviceType">设备类型</label>
               <v-select :list="options" v-model="deviceType" :valueItem='valueItem'></v-select> 
             </div>
             <div class="add-form-item-select" v-if="mBox.title=='新增设备位置' || mBox.title=='修改设备位置'">
-              <label for="deviceCode">设备编号</label>
+              <label for="deviceCode">设备名称</label>
               <v-select :list="deviceCodeList" v-model="add.deviceCode" :valueItem='valueItem1'></v-select>
               <!-- <span>{{add.deviceCode}}</span> -->
             </div>
@@ -86,14 +86,14 @@
               <label for="bedNumber">填写床号</label>
               <input type="text" v-model="add.bedNumber" class="input" required>
             </div>
-            <div class="add-form-del" v-if="mBox.title=='删除设备位置'">
-              确定删除么？
+            <div class="add-form-del" v-if="mBox.title=='提示'">
+              确定删除吗？
             </div>
             <div>
-              <button v-if="mBox.title=='新增设备位置'" class="btn btn-submit" @click="addDevicePos()">提交</button>
-              <button v-if="mBox.title=='修改设备位置'" class="btn btn-submit" @click="editDevice()">修改</button>
-              <button v-if="mBox.title=='删除设备位置'" class="btn btn-submit btn-del" @click="delDevice()">确定</button>
-              <button v-if="mBox.title=='删除设备位置'" class="btn btn-submit btn-del cancle" @click="undelDevice()">取消</button>
+              <button v-if="mBox.title=='新增设备位置'" class="btn btn-submit" @click.prevent="addDevicePos()">提交</button>
+              <button v-if="mBox.title=='修改设备位置'" class="btn btn-submit" @click.prevent="editDevice()">修改</button>
+              <button v-if="mBox.title=='提示'" class="btn btn-submit btn-del" @click.prevent="delDevice()">确定</button>
+              <button v-if="mBox.title=='提示'" class="btn btn-submit btn-del cancle" @click.prevent="undelDevice()">取消</button>
             </div>
           </form>
         </message-box>
@@ -146,7 +146,7 @@ import VNotice from 'base/v-notice/v-notice'
           info:'',
         },
         dialogOption:{
-          title: "确定删除?"
+          title: "确定删除吗?"
         },
         showDialog:true,
         valueItem:'',
@@ -257,6 +257,13 @@ import VNotice from 'base/v-notice/v-notice'
               that.notice.info = ''
             },1000)
           }
+        }).catch((err)=>{
+             that.notice.type = 'error'
+            that.notice.info = '添加失败'
+            setTimeout(()=>{
+              that.notice.type = ''
+              that.notice.info = ''
+            },1000)         
         })
       },
      showadd(){
@@ -307,23 +314,39 @@ import VNotice from 'base/v-notice/v-notice'
         this.add.wardNumber = ''
         this.add.bedNumber = ''
         this.add.deviceId = ''
-        this.valueItem =''
-        this.valueItem1 =''
+        this.valueItem = ''
+        this.valueItem1 = ''
         this.add.devicePositionId =''
       },
       // 修改设备
       modifyDevice (item) {
         this.mBox.title=`修改设备位置`
+         
         // 填充参数
         // 根据设备号获取设备类型
         let deviceTypeName = ''
+        let deviceTypeCode = ''
+        let deviceName = ''
+        let deviceId = ''
         devicePositions(item.devicePositionId).then((res)=>{
          if(res.code==200){
-           let deviceTypeCode = res.data.deviceTypeName =='输液监控器' ? '01': "03"
-           let deviceTypeName = res.data.deviceTypeName
-           let deviceName = res.data.deviceName
+           if (res.data.deviceTypeId==null) {
+            deviceTypeCode = ''
+            deviceTypeName = ''
+            deviceName = 0
+            deviceId = 0
+            this.add.deviceCode = 0
+            
+           }else {
+            deviceTypeCode = res.data.deviceTypeName =='输液监控器' ? '01': "03"
+            deviceTypeName = res.data.deviceTypeName
+            deviceName = res.data.deviceName
+            deviceId = res.data.deviceId
+            this.add.deviceCode = res.data.deviceId
+            console.log(res.data.deviceId)
+           }
             this.getDeviceCode()
-            return Promise.resolve({deviceTypeName,deviceTypeCode,deviceName})
+            return Promise.resolve({deviceTypeName,deviceTypeCode,deviceName,deviceId})
          }
         })
         .then((data)=>{
@@ -331,18 +354,18 @@ import VNotice from 'base/v-notice/v-notice'
             this.add.deviceTypeCode = data.deviceTypeCode
             this.add.wardNumber = item.wardNumber
             this.add.bedNumber = item.bedNumber
-            this.add.deviceId = item.deviceId
+            this.add.deviceId = data.deviceId
             this.add.devicePositionId = item.devicePositionId
             this.valueItem = `${data.deviceTypeName}`
             this.valueItem1 = data.deviceName
-            console.log(this.valueItem1)
+            console.log(data.deviceName)
             this.messageShow=true
         })
       },
       // 删除设备
       removeDevice(item) {
         this.messageShow=true
-        this.mBox.title=`删除设备位置`
+        this.mBox.title=`提示`
         this.add.devicePositionId = item.devicePositionId 
       },
       // 提交删除

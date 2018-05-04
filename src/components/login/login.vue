@@ -3,10 +3,10 @@
     <header class="login-header">医疗护理智能监测系统</header>
     <div class="login-wrapper">
       <div class="login-content">
-        <form class="login-form" @submit.prevent="onSubmit">
+        <form class="login-form" @submit.prevent="onSubmit" autocomplete="off">
           <div class="login-form-row">
             <!-- <label for="username">用户名</label> -->
-            <input type="text" name="username" id="username" placeholder="用户名" v-model="loginform.username.value">
+            <input type="text"  name="username" id="username" placeholder="用户名" v-model="loginform.username.value">
           </div>
           <div class="login-form-row">
             <!-- <label for="password">密码</label> -->
@@ -32,6 +32,7 @@
 <script>
 import {toLogin} from 'api/login.js'
 import Loading from 'base/loading/loading'
+import {Axios} from 'api/config'
   export default {
     data() {
       return {
@@ -91,6 +92,7 @@ import Loading from 'base/loading/loading'
             this.$store.commit('setLogin','login')
             this.$store.commit('changeheadText',res.inpatientAreaName)
             this.$store.commit('setToken',res.token)
+             Axios.defaults.headers.token=res.token
             this.$router.push('/home')
           }else {
            this.verify = true

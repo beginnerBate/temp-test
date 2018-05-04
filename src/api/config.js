@@ -1,7 +1,6 @@
 import axios from 'axios'
 import loS from '@/common/js/loStorage'
 export const ERR_OK = 200
-
 export function getUrl (port="port") {
   return axios.get('static/config.json').then((res)=>{
     return Promise.resolve(res.data[port])
@@ -22,3 +21,7 @@ export const Axios = axios.create({
     token:loS.getItem('token',true)
   }
 })
+
+export function getToken () {
+  return loS.getItem('token', true)
+}

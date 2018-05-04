@@ -110,6 +110,7 @@ npm run build --report
 ## 相关问题
   1. vue click 事件 会点击子元素 利用index
   2. 只要异步动态获取数据 要用loading加载
+  3. ie9 在vue下的兼容问题
 ## 细节完善
   1. 添加token
   2. 页面刷新的时候分页没有改变 当前页面刷新 和 只有第一页刷新 两种
@@ -119,5 +120,12 @@ npm run build --report
 ## 测试
 // "port": "http://192.168.0.200:8888/webservice/"
 // "port": "http://192.168.0.100/mcim-webservice"
-  
+## ie兼容问题
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+1. input 问题---关闭浏览器输入框自动补齐 兼容IE,FF,Chrome等主流浏览器
+<!-- autocomplete="off" -->
+<input type="text" disableautocomplete id="number"/>
+<input type="text" autocomplete="off" id="number"/>
+2. Error in beforeDestroy hook: "TypeError: 对象不支持“destroy”属性或方法" ie9
+3. SCRIPT5022: SecurityError ie11 ie10 ie9 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
