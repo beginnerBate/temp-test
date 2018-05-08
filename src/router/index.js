@@ -11,6 +11,7 @@ import Set from 'components/set/set'
 import ModifyPwd from 'components/modify-pwd/modify-pwd'
 import TAdress from 'components/t-adress/t-adress'
 import Trans from 'components/trans/trans'
+import Alarm from 'components/alarm/alarm'
 
 
 export default new Router({
@@ -44,6 +45,10 @@ export default new Router({
         {
            path: 'trans',
            component:Trans
+        },
+        {
+          path:'alarm',
+          component:Alarm
         },
         {
           path: 'set',

@@ -91,7 +91,17 @@
    数据对接
    http://192.168.0.100/mcim-webservice/login 
    提交方式：post  
-   参数：username password exp (0:20分钟 1:7天) 默认为1   
+   参数：username password exp (0:20分钟 1:7天) 默认为1
+## 输液报警查询页面开发
+  表格渲染
+  查询字段设置
+  ```javascript
+  // 1. 新增导航
+  // 2. 新建文件 alarm
+  // 3. 配置路由
+  // 4. 新增接口数据
+  // 5. 修改字段
+  ```   
 ## Build Setup
 
 ``` bash

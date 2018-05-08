@@ -5,7 +5,6 @@
       <div class="temp-search-wrapper">
         <div class="temp-search-row"><label>病房号</label><input class="input" type="text" v-model="wardNumber"></div>
         <div class="temp-search-row"><label>床号</label><input class="input" type="text" v-model="bedNumber"></div>
-        <div class="temp-search-row"><label>剩余容量</label><input class="input" type="text" v-model="surplus"></div>
         <div class="temp-search-row relative">
           <label>开始时间</label>
           <flat-pickr v-model="startTime" :config="config" class="input"></flat-pickr>
@@ -35,14 +34,8 @@
               <th>序号</th>
               <th>病房号</th>
               <th>床号</th>      
-              <th>设备名称</th>
-              <th>液瓶容量(mL)</th>
-              <th>剩余容量(mL)</th>
-              <th>滴数</th>
-              <th>输液计时(mL)</th>
-              <th>液滴速度(mL/min)</th>
-              <th>监测时间</th>
-              <th>状态</th>
+              <th>报警时间</th>
+              <!-- <th>状态</th> -->
             </tr>
           </thead>
           <tbody>
@@ -51,20 +44,14 @@
               <th>{{(index+1)+((page-1) *row)}}</th>
               <th>{{item.wardNumber}}</th>
               <th>{{item.bedNumber}}</th>
-              <th>{{item.deviceName}}</th>
-              <th>{{item.volum}}</th>
-              <th>{{item.surplus}}</th>
-              <th>{{item.dotCnt}}</th>
-              <th>{{item.timer}}</th>
-              <th>{{item.dotRate}}</th>
               <th>{{item.recordTime | formatDate}}</th>
-              <th :style="{color:item.status == 1 ? '#F56C6C':'#67C23A'}">{{item.status|formatStatus}}</th>
+              <!-- <th :style="{color:item.status == 1 ? '#F56C6C':'#67C23A'}">{{item.status|formatStatus}}</th> -->
             </tr>
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="9"><page :total="total" :current-page="page" @pagechange='pagechange'></page></td>
-              <td colspan="2" class="item-switch-re">
+              <td colspan="3"><page :total="total" :current-page="page" @pagechange='pagechange'></page></td>
+              <td colspan="1" class="item-switch-re">
                 <div class="item">
                   <span class="item-label" :style="{color: auto == true ? '#398dee': '#333333'}">自动刷新</span>
                     <div class="switch">
@@ -86,7 +73,7 @@
 </template>
 
 <script>
-import {getTrans} from 'api/getTrans'
+import {getTrans} from 'api/alarm'
 import Page from 'base/page/page'
 import {formatDate} from 'api/data'
 import flatPickr from 'vue-flatpickr-component'
@@ -180,8 +167,8 @@ import Loading from 'base/loading/loading'
       export2Excel() {
       　　require.ensure([], () => {
       　　　　const { export_json_to_excel } = require('vendor/Export2Excel');
-      　　　　const tHeader = [ '病区', '病房号', '床号', '设备名称','液瓶剩余容量(mL)','液瓶容量(mL)','滴数','输液计时(mL)',	'液滴速度(mL/min)',	'监测时间'];
-      　　　　const filterVal = [ 'inpatientAreaName', 'wardNumber','bedNumber','recordTime','surplus','volum','dotCnt','timer','dotRate', 'recordTime'];
+      　　　　const tHeader = ['病区', '病房号', '床号','报警时间'];
+      　　　　const filterVal = ['inpatientAreaName', 'wardNumber','bedNumber', 'recordTime'];
       　　　　const list = this.tableData;
       　　　　const data = this.formatJson(filterVal, list);
       　　　　export_json_to_excel(tHeader, data, '列表excel');

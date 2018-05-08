@@ -52,6 +52,10 @@ export default {
                {
                  name: '输液监控数据',
                  url: '/home/trans'
+               },
+               {
+                 name:'输液报警数据',
+                 url:'/home/alarm'
                }
           ]
         },
