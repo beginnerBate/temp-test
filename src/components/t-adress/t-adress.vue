@@ -131,7 +131,8 @@ import VNotice from 'base/v-notice/v-notice'
         onData:'',
         options:[
           {text:'输液监控器',value:'01'},
-          {text:'体温计',value:'03'},
+          {text:'输液报警器',value:'02'},
+          {text:'体温计',value:'03'}
         ],
         deviceType: '' , // 设备类型
         add: {
@@ -320,6 +321,7 @@ import VNotice from 'base/v-notice/v-notice'
         this.valueItem = ''
         this.valueItem1 = ''
         this.add.devicePositionId =''
+        this.deviceCodeList =[]
       },
       // 修改设备
       modifyDevice (item) {
@@ -361,7 +363,7 @@ import VNotice from 'base/v-notice/v-notice'
             this.add.devicePositionId = item.devicePositionId
             this.valueItem = `${data.deviceTypeName}`
             this.valueItem1 = data.deviceName
-            console.log(data.deviceName)
+            // console.log(data.deviceName)
             this.messageShow=true
         })
       },
@@ -428,6 +430,8 @@ import VNotice from 'base/v-notice/v-notice'
       },
       deviceType (value) {
         // 根据设备类型请求设备号
+        // this.valueItem1 = 0
+        // this.add.deviceCode = 0
         this.getDeviceCode()
         // 数据模拟
       }

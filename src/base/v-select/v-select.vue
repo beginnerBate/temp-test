@@ -32,7 +32,7 @@ export default {
   },
   watch: {
     sData(value) {
-      if(value==0 && value==' ') {
+      if( value == 0 || value==' ' || !value) {
       this.$emit('change',0)        
       }
     }

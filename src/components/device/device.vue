@@ -126,6 +126,7 @@ import VNotice from 'base/v-notice/v-notice'
         onData: false,
         options:[
           {text:'输液监控器',value:'01'},
+          {text:'输液报警器',value:'02'},
           {text:'体温计',value:'03'},
         ],
         add: {
@@ -136,6 +137,7 @@ import VNotice from 'base/v-notice/v-notice'
         },
         deviceCodeList:[
           {text:'输液监控器',value:'01'},
+          {text:'输液报警器',value:'02'},
           {text:'体温计',value:'03'}
           ],
         messageShow: false,
@@ -305,8 +307,15 @@ import VNotice from 'base/v-notice/v-notice'
         this.messageShow=true
         this.mBox.title=`修改设备`
         // 填充参数
-        console.log(item.deviceTypeName)
-        this.add.deviceTypeCode = item.deviceTypeName =='输液监控器' ? '01': "03"
+        // console.log(item.deviceTypeName)
+        if(item.deviceTypeName =='输液监控器'){
+          this.add.deviceTypeCode = '01'
+        }else if (item.deviceTypeName =='输液报警器') {
+          this.add.deviceTypeCode = '02'
+        }else if (item.deviceTypeName =='体温计'){
+          this.add.deviceTypeCode = '03'
+        }
+        
         this.add.deviceName = item.deviceName
         this.add.deviceCode = item.deviceCode
         this.add.deviceId = item.deviceId
