@@ -362,8 +362,8 @@ import VNotice from 'base/v-notice/v-notice'
       export2Excel() {
       　　require.ensure([], () => {
       　　　　const { export_json_to_excel } = require('vendor/Export2Excel');
-      　　　　const tHeader = ['序号', '设备号', '设备名称', '设备类型', '状态','正常'];
-      　　　　const filterVal = ['deviceId', 'deviceCode', 'deviceName','deviceTypeName','status','remark'];
+      　　　　const tHeader = ['序号', '设备号', '设备名称', '设备类型', '状态'];
+      　　　　const filterVal = ['deviceId', 'deviceCode', 'deviceName','deviceTypeName','status'];
       　　　　const list = this.tableData;
       　　　　const data = this.formatJson(filterVal, list);
       　　　　export_json_to_excel(tHeader, data, '列表excel');

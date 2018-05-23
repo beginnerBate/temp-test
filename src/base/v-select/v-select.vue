@@ -28,12 +28,23 @@ export default {
     valueItem: {
       type: [String, Number, Object],
       default:''
-    }
+    },
+    clear:''
   },
   watch: {
     sData(value) {
       if( value == 0 || value==' ' || !value) {
       this.$emit('change',0)        
+      }
+    },
+    list(value){
+      if (value.length==0){
+        this.sData = ''
+      }
+    },
+    valueItem(value){
+      if(!value){
+        this.sData=''
       }
     }
   },

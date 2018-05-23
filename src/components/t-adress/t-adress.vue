@@ -78,7 +78,6 @@
             <div class="add-form-item-select" v-if="mBox.title=='新增设备位置' || mBox.title=='修改设备位置'">
               <label for="deviceCode">设备名称</label>
               <v-select :list="deviceCodeList" v-model="add.deviceCode" :valueItem='valueItem1'></v-select>
-              <!-- <span>{{add.deviceCode}}</span> -->
             </div>
             <div class="add-form-item-input" v-if="mBox.title=='新增设备位置' || mBox.title=='修改设备位置'">
               <label for="wardNumber">填写房号</label>
@@ -273,6 +272,7 @@ import VNotice from 'base/v-notice/v-notice'
         this.messageShow=true
         this.mBox.title=`新增设备位置`
         this.clearData()
+        this.deviceType = ''
       },
       editDevice(){
         let mydata = {
@@ -348,7 +348,7 @@ import VNotice from 'base/v-notice/v-notice'
             deviceName = res.data.deviceName
             deviceId = res.data.deviceId
             this.add.deviceCode = res.data.deviceId
-            console.log(res.data.deviceId)
+            // console.log(res.data.deviceId)
            }
             this.getDeviceCode()
             return Promise.resolve({deviceTypeName,deviceTypeCode,deviceName,deviceId})
@@ -420,7 +420,7 @@ import VNotice from 'base/v-notice/v-notice'
       }
     },
     created () {
-      this.getLocationData()
+      // this.getLocationData()
       this.getLocationData()
     },
     watch: {
@@ -429,11 +429,11 @@ import VNotice from 'base/v-notice/v-notice'
         this.getLocationData()
       },
       deviceType (value) {
-        // 根据设备类型请求设备号
-        // this.valueItem1 = 0
-        // this.add.deviceCode = 0
         this.getDeviceCode()
-        // 数据模拟
+        // 清空
+        this.add.deviceCode = ''
+        this.valueItem1 = ''
+        // console.log(this.deviceCodeList)
       }
     },
     mounted () {

@@ -35,7 +35,7 @@
               <th>病房号</th>
               <th>床号</th>      
               <th>报警时间</th>
-              <!-- <th>状态</th> -->
+              <th>处理状态</th>
             </tr>
           </thead>
           <tbody>
@@ -45,12 +45,13 @@
               <th>{{item.wardNumber}}</th>
               <th>{{item.bedNumber}}</th>
               <th>{{item.recordTime | formatDate}}</th>
-              <!-- <th :style="{color:item.status == 1 ? '#F56C6C':'#67C23A'}">{{item.status|formatStatus}}</th> -->
+              <!-- <th :style="{color:item.runStatus == 0 ? '#F56C6C':'#67C23A'}">{{item.runStatus|formatStatus}}</th> -->
+              <th :style="{color:item.status == 0 ? '#F56C6C':'#67C23A'}">{{item.status|formatStatus}}</th>
             </tr>
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="3"><page :total="total" :current-page="page" @pagechange='pagechange'></page></td>
+              <td colspan='4'><page :total="total" :current-page="page" @pagechange='pagechange'></page></td>
               <td colspan="1" class="item-switch-re">
                 <div class="item">
                   <span class="item-label" :style="{color: auto == true ? '#398dee': '#333333'}">自动刷新</span>
@@ -111,9 +112,9 @@ import Loading from 'base/loading/loading'
       },
       formatStatus(status) {
         if (status == 0) {
-          return '运行'
+          return '未处理'
         }else {
-          return '阻断'
+          return '已处理'
         }
       }
     },

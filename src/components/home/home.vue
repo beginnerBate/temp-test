@@ -6,10 +6,7 @@
     </div>
     <!-- 右侧内容 -->
     <div class="home-left">
-      <keep-alive>
       <router-view></router-view>
-      </keep-alive>
-      
     </div>
   </div>
 </template>

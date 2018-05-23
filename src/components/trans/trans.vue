@@ -40,9 +40,11 @@
               <th>剩余容量(mL)</th>
               <th>滴数</th>
               <th>输液计时(mL)</th>
-              <th>液滴速度(mL/min)</th>
-              <th>监测时间</th>
-              <th>状态</th>
+              <th>液滴速度(mL/滴)</th>
+              <th>开始时间</th>
+              <th>结束时间</th>
+              <th>运行状态</th>
+              <th>处理状态</th>
             </tr>
           </thead>
           <tbody>
@@ -57,13 +59,15 @@
               <th>{{item.dotCnt}}</th>
               <th>{{item.timer}}</th>
               <th>{{item.dotRate}}</th>
-              <th>{{item.recordTime | formatDate}}</th>
+              <th>{{item.startTime | formatDate}}</th>
+              <th>{{item.endTime | formatDate}}</th>
               <th :style="{color:item.status == 1 ? '#F56C6C':'#67C23A'}">{{item.status|formatStatus}}</th>
+              <th :style="{color:item.runStatus == 0 ? '#F56C6C':'#67C23A'}">{{item.runStatus|formatRunstatus}}</th>
             </tr>
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="9"><page :total="total" :current-page="page" @pagechange='pagechange'></page></td>
+              <td colspan="11"><page :total="total" :current-page="page" @pagechange='pagechange'></page></td>
               <td colspan="2" class="item-switch-re">
                 <div class="item">
                   <span class="item-label" :style="{color: auto == true ? '#398dee': '#333333'}">自动刷新</span>
@@ -128,6 +132,13 @@ import Loading from 'base/loading/loading'
         }else {
           return '阻断'
         }
+      },
+      formatRunstatus(status) {
+        if (status == 0) {
+          return '未处理'
+        }else {
+          return '已处理'
+        }
       }
     },
     components: {
@@ -180,8 +191,8 @@ import Loading from 'base/loading/loading'
       export2Excel() {
       　　require.ensure([], () => {
       　　　　const { export_json_to_excel } = require('vendor/Export2Excel');
-      　　　　const tHeader = [ '病区', '病房号', '床号', '设备名称','液瓶剩余容量(mL)','液瓶容量(mL)','滴数','输液计时(mL)',	'液滴速度(mL/min)',	'监测时间'];
-      　　　　const filterVal = [ 'inpatientAreaName', 'wardNumber','bedNumber','recordTime','surplus','volum','dotCnt','timer','dotRate', 'recordTime'];
+      　　　　const tHeader = [ '病区', '病房号', '床号', '设备名称','液瓶剩余容量(mL)','液瓶容量(mL)','滴数','输液计时(mL)',	'液滴速度(mL/滴)',	'监测时间'];
+      　　　　const filterVal = [ 'inpatientAreaName', 'wardNumber','bedNumber','deviceName','surplus','volum','dotCnt','timer','dotRate', 'startTime'];
       　　　　const list = this.tableData;
       　　　　const data = this.formatJson(filterVal, list);
       　　　　export_json_to_excel(tHeader, data, '列表excel');
