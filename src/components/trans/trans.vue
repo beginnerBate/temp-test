@@ -40,7 +40,7 @@
               <th>剩余容量(mL)</th>
               <th>滴数</th>
               <th>输液计时(mL)</th>
-              <th>液滴速度(mL/滴)</th>
+              <th>液滴速度(滴/分)</th>
               <th>开始时间</th>
               <th>结束时间</th>
               <th>运行状态</th>
@@ -191,7 +191,7 @@ import Loading from 'base/loading/loading'
       export2Excel() {
       　　require.ensure([], () => {
       　　　　const { export_json_to_excel } = require('vendor/Export2Excel');
-      　　　　const tHeader = [ '病区', '病房号', '床号', '设备名称','液瓶剩余容量(mL)','液瓶容量(mL)','滴数','输液计时(mL)',	'液滴速度(mL/滴)',	'监测时间'];
+      　　　　const tHeader = [ '病区', '病房号', '床号', '设备名称','液瓶剩余容量(mL)','液瓶容量(mL)','滴数','输液计时(mL)',	'液滴速度(滴/分)',	'监测时间'];
       　　　　const filterVal = [ 'inpatientAreaName', 'wardNumber','bedNumber','deviceName','surplus','volum','dotCnt','timer','dotRate', 'startTime'];
       　　　　const list = this.tableData;
       　　　　const data = this.formatJson(filterVal, list);
